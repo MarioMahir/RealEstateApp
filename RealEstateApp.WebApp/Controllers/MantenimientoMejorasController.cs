@@ -12,8 +12,9 @@ public class MantenimientoMejorasController : CatalogMaintenanceControllerBase<I
 {
     private readonly IPropertyService _propertyService;
 
-    public MantenimientoMejorasController(IGenericService<Improvement> service, IPropertyService propertyService)
-        : base(service)
+    public MantenimientoMejorasController(
+        IGenericService<Improvement> service, IPropertyService propertyService, IFileStorageService fileStorageService)
+        : base(service, fileStorageService)
     {
         _propertyService = propertyService;
     }

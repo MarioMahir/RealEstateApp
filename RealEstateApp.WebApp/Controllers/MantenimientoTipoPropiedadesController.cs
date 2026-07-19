@@ -7,8 +7,9 @@ public class MantenimientoTipoPropiedadesController : CatalogMaintenanceControll
 {
     private readonly IPropertyService _propertyService;
 
-    public MantenimientoTipoPropiedadesController(IGenericService<PropertyType> service, IPropertyService propertyService)
-        : base(service)
+    public MantenimientoTipoPropiedadesController(
+        IGenericService<PropertyType> service, IPropertyService propertyService, IFileStorageService fileStorageService)
+        : base(service, fileStorageService)
     {
         _propertyService = propertyService;
     }
@@ -31,5 +32,11 @@ public class MantenimientoTipoPropiedadesController : CatalogMaintenanceControll
     {
         var propiedades = await _propertyService.GetAllWithDetailsAsync();
         return propiedades.GroupBy(p => p.PropertyTypeId).ToDictionary(g => g.Key, g => g.Count());
+    }
+
+    protected override async Task<List<string>> ObtenerImagenesAEliminarAsync(int id)
+    {
+        var propiedades = await _propertyService.GetAllWithDetailsAsync();
+        return propiedades.Where(p => p.PropertyTypeId == id).SelectMany(p => p.Images.Select(i => i.Url)).ToList();
     }
 }

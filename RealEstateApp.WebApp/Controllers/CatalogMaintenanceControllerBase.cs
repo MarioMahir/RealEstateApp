@@ -16,10 +16,12 @@ namespace RealEstateApp.WebApp.Controllers;
 public abstract class CatalogMaintenanceControllerBase<TEntity> : Controller where TEntity : class, ICatalogItem, new()
 {
     protected readonly IGenericService<TEntity> Service;
+    private readonly IFileStorageService _fileStorageService;
 
-    protected CatalogMaintenanceControllerBase(IGenericService<TEntity> service)
+    protected CatalogMaintenanceControllerBase(IGenericService<TEntity> service, IFileStorageService fileStorageService)
     {
         Service = service;
+        _fileStorageService = fileStorageService;
     }
 
     protected abstract string Titulo { get; }
@@ -39,6 +41,12 @@ public abstract class CatalogMaintenanceControllerBase<TEntity> : Controller whe
     // (PropertyTypeId/SaleTypeId son FK directo; Improvement es N:M via
     // PropertyImprovement), asi que esto lo resuelve cada subclase concreta.
     protected abstract Task<Dictionary<int, int>> ObtenerConteosAsync();
+
+    // URLs de imagenes que quedaran huerfanas en disco si se elimina este item
+    // (cascada real de FK hacia Property) -- vacio por defecto, ya que
+    // eliminar una Mejora nunca cascada Property/imagenes. PropertyType y
+    // SaleType lo sobrescriben porque su FK hacia Property si es Cascade.
+    protected virtual Task<List<string>> ObtenerImagenesAEliminarAsync(int id) => Task.FromResult(new List<string>());
 
     public async Task<IActionResult> Index()
     {
@@ -173,9 +181,12 @@ public abstract class CatalogMaintenanceControllerBase<TEntity> : Controller whe
             return RedirectToAction(nameof(Index));
         }
 
+        var imagenesAEliminar = await ObtenerImagenesAEliminarAsync(id);
         try
         {
             await Service.DeleteAsync(entidad);
+            foreach (var url in imagenesAEliminar)
+                _fileStorageService.DeleteImage(url);
             TempData["Mensaje"] = DeleteSuccessMessage;
         }
         catch (Exception)

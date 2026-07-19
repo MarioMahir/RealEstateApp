@@ -38,6 +38,26 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
+
+    // Sin esto, un token ausente/invalido o un rol no autorizado producen un
+    // 401/403 con cuerpo vacio (comportamiento por defecto de JwtBearer) --
+    // la rubrica pide un mensaje claro en el cuerpo de ambas respuestas.
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsJsonAsync(new { message = "No está autorizado para acceder a este recurso." });
+        },
+        OnForbidden = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsJsonAsync(new { message = "Acceso denegado. No tiene permisos para realizar esta acción." });
+        }
+    };
 });
 builder.Services.AddAuthorization();
 

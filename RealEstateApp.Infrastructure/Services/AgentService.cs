@@ -16,17 +16,20 @@ public class AgentService : IAgentService
     private readonly IGenericRepository<Property> _propertyRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IFileStorageService _fileStorageService;
 
     public AgentService(
         UserManager<ApplicationUser> userManager,
         IGenericRepository<Property> propertyRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IFileStorageService fileStorageService)
     {
         _userManager = userManager;
         _propertyRepository = propertyRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<List<AgentDto>> GetAllAsync()
@@ -104,13 +107,25 @@ public class AgentService : IAgentService
         // FK real) imagenes/ofertas/mensajes/favoritos/mejoras. El FK
         // Agente->Property es Restrict a proposito (ver Modelo de dominio en
         // la guia del proyecto), asi que el ApplicationUser solo puede borrarse despues.
-        var properties = await _propertyRepository.Query().Where(p => p.AgentId == agentId).ToListAsync();
+        var properties = await _propertyRepository.Query()
+            .Where(p => p.AgentId == agentId)
+            .Include(p => p.Images)
+            .ToListAsync();
+        var imagenesAEliminar = properties.SelectMany(p => p.Images.Select(i => i.Url)).ToList();
+
         foreach (var property in properties)
             _propertyRepository.Delete(property);
         await _unitOfWork.SaveChangesAsync();
 
         var resultado = await _userManager.DeleteAsync(user);
-        return resultado.Succeeded;
+        if (!resultado.Succeeded) return false;
+
+        foreach (var url in imagenesAEliminar)
+            _fileStorageService.DeleteImage(url);
+        if (!string.IsNullOrEmpty(user.FotoUrl))
+            _fileStorageService.DeleteImage(user.FotoUrl);
+
+        return true;
     }
 
     private async Task<ApplicationUser?> GetAgentUserOrNullAsync(string id)

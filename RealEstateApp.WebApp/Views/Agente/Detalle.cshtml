@@ -67,44 +67,50 @@
         {
             @foreach (var grupo in Model.GruposDeOfertas)
             {
+                var seleccionado = grupo.ClienteId == Model.ClienteSeleccionadoId;
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>@grupo.NombreCliente</span>
+                        <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@grupo.ClienteId" class="@(seleccionado ? "fw-bold" : "")">
+                            @grupo.NombreCliente
+                        </a>
                         <small class="text-muted">
                             @grupo.CantidadOfertas oferta(s) &middot; última: RD$@grupo.UltimaOferta.ToString("N0")
                             <span class="badge @(grupo.EstadoUltimaOferta == "Aceptada" ? "bg-success" : grupo.EstadoUltimaOferta == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@grupo.EstadoUltimaOferta</span>
                         </small>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        @foreach (var oferta in grupo.Ofertas)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    RD$@oferta.Monto.ToString("N0")
-                                    <br />
-                                    <small class="text-muted">@oferta.Fecha.ToString("dd/MM/yyyy")</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
-                                    @if (oferta.Estado == "Pendiente")
-                                    {
-                                        <div class="mt-1">
-                                            <form asp-controller="Agente" asp-action="AceptarOferta" method="post" class="d-inline">
-                                                <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
-                                                <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
-                                            </form>
-                                            <form asp-controller="Agente" asp-action="RechazarOferta" method="post" class="d-inline">
-                                                <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">Rechazar</button>
-                                            </form>
-                                        </div>
-                                    }
-                                </div>
-                            </li>
-                        }
-                    </ul>
+                    @if (seleccionado)
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var oferta in grupo.Ofertas)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        RD$@oferta.Monto.ToString("N0")
+                                        <br />
+                                        <small class="text-muted">@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
+                                        @if (oferta.Estado == "Pendiente")
+                                        {
+                                            <div class="mt-1">
+                                                <form asp-controller="Agente" asp-action="AceptarOferta" method="post" class="d-inline">
+                                                    <input type="hidden" name="offerId" value="@oferta.Id" />
+                                                    <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
+                                                </form>
+                                                <form asp-controller="Agente" asp-action="RechazarOferta" method="post" class="d-inline">
+                                                    <input type="hidden" name="offerId" value="@oferta.Id" />
+                                                    <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Rechazar</button>
+                                                </form>
+                                            </div>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
                 </div>
             }
         }

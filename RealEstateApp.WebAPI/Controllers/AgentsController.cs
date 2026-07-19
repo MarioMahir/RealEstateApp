@@ -28,6 +28,9 @@ public class AgentsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id)
     {
+        if (!Guid.TryParse(id, out _))
+            return BadRequest(new { message = "El id del agente no tiene un formato válido." });
+
         var agent = await _agentService.GetByIdAsync(id);
         return agent is null
             ? NotFound(new { message = "El agente solicitado no existe." })
@@ -37,6 +40,9 @@ public class AgentsController : ControllerBase
     [HttpGet("{id}/properties")]
     public async Task<IActionResult> GetAgentProperty(string id)
     {
+        if (!Guid.TryParse(id, out _))
+            return BadRequest(new { message = "El id del agente no tiene un formato válido." });
+
         var properties = await _agentService.GetAgentPropertiesAsync(id);
         if (properties is null)
             return NotFound(new { message = "El agente solicitado no existe." });
@@ -48,6 +54,9 @@ public class AgentsController : ControllerBase
     [Authorize(Roles = Roles.Administrador)]
     public async Task<IActionResult> ChangeStatus(string id, AgentStatusUpdateDto dto)
     {
+        if (!Guid.TryParse(id, out _))
+            return BadRequest(new { message = "El id del agente no tiene un formato válido." });
+
         // dto.Estado es bool? justo para que [Required] detecte un cuerpo sin
         // el campo (en un bool no-nullable, [Required] es un no-op); si llego
         // aqui, ApiController ya garantizo que no es null.

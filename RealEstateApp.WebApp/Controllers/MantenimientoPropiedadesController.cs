@@ -241,6 +241,9 @@ public class MantenimientoPropiedadesController : Controller
 
         await _propertyService.UpdatePropertyAsync(cambios, modelo.ImprovementIds, modelo.ImagenesAEliminar, urls);
 
+        foreach (var url in existente.Images.Where(i => modelo.ImagenesAEliminar.Contains(i.Id)).Select(i => i.Url))
+            _fileStorageService.DeleteImage(url);
+
         TempData["Mensaje"] = "La propiedad fue actualizada correctamente.";
         return RedirectToAction(nameof(Index));
     }
@@ -295,6 +298,10 @@ public class MantenimientoPropiedadesController : Controller
         }
 
         await _propertyService.DeletePropertyAsync(id, AgentId);
+
+        foreach (var imagen in propiedad.Images)
+            _fileStorageService.DeleteImage(imagen.Url);
+
         TempData["Mensaje"] = "La propiedad fue eliminada correctamente.";
         return RedirectToAction(nameof(Index));
     }

@@ -10,10 +10,12 @@ public interface IOfferService : IGenericService<Offer>
     // corrompería el estado -- rechazaria "las demas pendientes" sin haber
     // aceptado nada nuevo). Acepta la oferta indicada, rechaza automaticamente
     // todas las demas ofertas Pendiente de la misma propiedad, y marca la
-    // propiedad como Vendida -- todo en una sola transaccion.
-    Task<OfferActionStatus> AcceptOfferAsync(int offerId, string agentId);
+    // propiedad como Vendida -- todo en una sola transaccion. `propertyId` se
+    // valida contra `offer.PropertyId` (defensa: el id de oferta debe
+    // pertenecer a la propiedad que el llamador dice estar operando).
+    Task<OfferActionStatus> AcceptOfferAsync(int offerId, string agentId, int propertyId);
 
-    Task<OfferActionStatus> RejectOfferAsync(int offerId, string agentId);
+    Task<OfferActionStatus> RejectOfferAsync(int offerId, string agentId, int propertyId);
 
     // Valida las reglas de negocio (propiedad Disponible, sin oferta Pendiente
     // duplicada del mismo cliente) antes de crear la oferta en estado Pendiente.

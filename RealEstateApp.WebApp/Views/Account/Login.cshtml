@@ -5,6 +5,11 @@
 
 <h1 class="mb-4">Iniciar sesión</h1>
 
+@if (ViewData["Mensaje"] is string mensaje)
+{
+    <div class="alert alert-info">@mensaje</div>
+}
+
 <div class="row">
     <div class="col-md-5">
         <form asp-controller="Account" asp-action="Login" method="post">

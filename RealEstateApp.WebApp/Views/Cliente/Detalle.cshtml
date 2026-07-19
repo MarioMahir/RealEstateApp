@@ -56,7 +56,7 @@
                     {
                         <tr>
                             <td>RD$@oferta.Monto.ToString("N0")</td>
-                            <td>@oferta.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td>@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
                                 <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
                             </td>
@@ -68,15 +68,35 @@
 
         @if (Model.PermiteNuevaOferta)
         {
-            @await Html.PartialAsync("_CreateOfferForm", Model.NuevaOferta)
-        }
-        else if (Model.Propiedad.Estado == "Disponible")
-        {
-            <div class="alert alert-secondary">Ya tiene una oferta pendiente para esta propiedad.</div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaOferta">
+                Enviar nueva oferta
+            </button>
+
+            <div class="modal fade" id="modalNuevaOferta" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Enviar nueva oferta</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            @await Html.PartialAsync("_CreateOfferForm", Model.NuevaOferta)
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
         else
         {
-            <div class="alert alert-secondary">Esta propiedad ya tiene una oferta aceptada y no permite nuevas ofertas.</div>
+            <button type="button" class="btn btn-primary" disabled>Enviar nueva oferta</button>
+            @if (Model.Propiedad.Estado == "Disponible")
+            {
+                <div class="alert alert-secondary mt-2">Ya tiene una oferta pendiente para esta propiedad.</div>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-2">Esta propiedad ya tiene una oferta aceptada y no permite nuevas ofertas.</div>
+            }
         }
     </div>
 </div>
@@ -85,4 +105,15 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    @{
+        var ofertaInvalida = ViewData.ModelState.TryGetValue(nameof(CreateOfferViewModel.Monto), out var monteState) && monteState.Errors.Count > 0;
+    }
+    @if (ofertaInvalida)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                new bootstrap.Modal(document.getElementById('modalNuevaOferta')).show();
+            });
+        </script>
+    }
 }

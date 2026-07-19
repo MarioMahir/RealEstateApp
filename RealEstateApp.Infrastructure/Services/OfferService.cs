@@ -20,11 +20,13 @@ public class OfferService : GenericService<Offer>, IOfferService
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<OfferActionStatus> AcceptOfferAsync(int offerId, string agentId)
+    public async Task<OfferActionStatus> AcceptOfferAsync(int offerId, string agentId, int propertyId)
     {
         var offer = await Repository.Query().Include(o => o.Property).FirstOrDefaultAsync(o => o.Id == offerId);
         if (offer is null) return OfferActionStatus.NotFound;
+        if (offer.PropertyId != propertyId) return OfferActionStatus.PropertyMismatch;
         if (offer.Property.AgentId != agentId) return OfferActionStatus.NotOwnedByAgent;
+        if (offer.Property.Estado != PropertyStatus.Disponible) return OfferActionStatus.PropertyNotAvailable;
         if (offer.Estado != OfferStatus.Pendiente) return OfferActionStatus.NotPending;
 
         var pendientes = Repository.Query()
@@ -47,10 +49,11 @@ public class OfferService : GenericService<Offer>, IOfferService
         return OfferActionStatus.Success;
     }
 
-    public async Task<OfferActionStatus> RejectOfferAsync(int offerId, string agentId)
+    public async Task<OfferActionStatus> RejectOfferAsync(int offerId, string agentId, int propertyId)
     {
         var offer = await Repository.Query().Include(o => o.Property).FirstOrDefaultAsync(o => o.Id == offerId);
         if (offer is null) return OfferActionStatus.NotFound;
+        if (offer.PropertyId != propertyId) return OfferActionStatus.PropertyMismatch;
         if (offer.Property.AgentId != agentId) return OfferActionStatus.NotOwnedByAgent;
         if (offer.Estado != OfferStatus.Pendiente) return OfferActionStatus.NotPending;
 

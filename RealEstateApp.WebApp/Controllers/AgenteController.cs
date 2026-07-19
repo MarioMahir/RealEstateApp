@@ -103,12 +103,14 @@ public class AgenteController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AceptarOferta(int offerId, int propertyId)
     {
-        var resultado = await _offerService.AcceptOfferAsync(offerId, AgentId);
+        var resultado = await _offerService.AcceptOfferAsync(offerId, AgentId, propertyId);
         TempData[resultado == OfferActionStatus.Success ? "Mensaje" : "Error"] = resultado switch
         {
             OfferActionStatus.Success => "La oferta fue aceptada correctamente y la propiedad fue marcada como vendida.",
             OfferActionStatus.NotFound => "La oferta solicitada no existe.",
+            OfferActionStatus.PropertyMismatch => "La oferta solicitada no existe.",
             OfferActionStatus.NotOwnedByAgent => "No tiene permisos sobre esta oferta.",
+            OfferActionStatus.PropertyNotAvailable => "No se puede aceptar una oferta para una propiedad que ya fue vendida.",
             OfferActionStatus.NotPending => "Esta oferta ya fue respondida.",
             _ => "No se pudo procesar la solicitud."
         };
@@ -120,11 +122,12 @@ public class AgenteController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RechazarOferta(int offerId, int propertyId)
     {
-        var resultado = await _offerService.RejectOfferAsync(offerId, AgentId);
+        var resultado = await _offerService.RejectOfferAsync(offerId, AgentId, propertyId);
         TempData[resultado == OfferActionStatus.Success ? "Mensaje" : "Error"] = resultado switch
         {
             OfferActionStatus.Success => "La oferta fue rechazada correctamente.",
             OfferActionStatus.NotFound => "La oferta solicitada no existe.",
+            OfferActionStatus.PropertyMismatch => "La oferta solicitada no existe.",
             OfferActionStatus.NotOwnedByAgent => "No tiene permisos sobre esta oferta.",
             OfferActionStatus.NotPending => "Esta oferta ya fue respondida.",
             _ => "No se pudo procesar la solicitud."
@@ -160,16 +163,20 @@ public class AgenteController : Controller
 
         if (foto is { Length: > 0 })
         {
+            var fotoAnterior = usuario!.FotoUrl;
             try
             {
-                usuario!.FotoUrl = await _fileStorageService.SaveImageAsync(foto.OpenReadStream(), foto.FileName, "usuarios");
+                usuario.FotoUrl = await _fileStorageService.SaveImageAsync(foto.OpenReadStream(), foto.FileName, "usuarios");
             }
             catch (InvalidOperationException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                modelo.FotoUrl = usuario!.FotoUrl;
+                modelo.FotoUrl = usuario.FotoUrl;
                 return View(modelo);
             }
+
+            if (!string.IsNullOrEmpty(fotoAnterior))
+                _fileStorageService.DeleteImage(fotoAnterior);
         }
 
         usuario!.Nombre = modelo.Nombre;

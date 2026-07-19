@@ -7,4 +7,8 @@ namespace RealEstateApp.Core.Interfaces.Services;
 public interface IFileStorageService
 {
     Task<string> SaveImageAsync(Stream content, string originalFileName, string subfolder);
+
+    // Borra el archivo fisico asociado a una URL devuelta por SaveImageAsync.
+    // Best-effort: nunca lanza si el archivo ya no existe o esta bloqueado.
+    void DeleteImage(string relativeUrl);
 }

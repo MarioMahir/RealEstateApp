@@ -34,6 +34,14 @@ internal static class PropertyBrowseHelper
             return;
         }
 
+        if (modelo.PropertyTypeId.HasValue &&
+            modelo.TiposPropiedad.All(o => o.Value != modelo.PropertyTypeId.Value.ToString()))
+        {
+            modelo.Propiedades = new List<PropertyListItemViewModel>();
+            modelo.Mensaje = "El tipo de propiedad seleccionado ya no existe.";
+            return;
+        }
+
         var criteria = new PropertyFilterCriteria
         {
             PropertyTypeId = modelo.PropertyTypeId,

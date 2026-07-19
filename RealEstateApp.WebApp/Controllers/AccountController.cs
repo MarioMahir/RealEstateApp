@@ -109,10 +109,16 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string? returnUrl)
     {
         if (User.Identity!.IsAuthenticated)
             return RedirectToAction(nameof(Index), "Home");
+
+        // El esquema de cookies redirige aqui con ?ReturnUrl= cuando un
+        // usuario no autenticado intenta acceder directamente a una pantalla
+        // privada -- distinto de llegar por el enlace normal "Iniciar sesion".
+        if (!string.IsNullOrEmpty(returnUrl))
+            ViewData["Mensaje"] = "Debe iniciar sesión para acceder a esta funcionalidad.";
 
         return View(new LoginViewModel());
     }
