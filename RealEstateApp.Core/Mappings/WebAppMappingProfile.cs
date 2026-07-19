@@ -1,6 +1,7 @@
 using AutoMapper;
 using RealEstateApp.Core.Entities;
 using RealEstateApp.Core.ViewModels.Agent;
+using RealEstateApp.Core.ViewModels.Cliente;
 using RealEstateApp.Core.ViewModels.Property;
 
 namespace RealEstateApp.Core.Mappings;
@@ -28,5 +29,11 @@ public class WebAppMappingProfile : Profile
             .ForMember(d => d.Estado, o => o.MapFrom(s => s.Estado.ToString()));
 
         CreateMap<ApplicationUser, AgentListItemViewModel>();
+
+        CreateMap<Offer, OfferItemViewModel>()
+            .ForMember(d => d.Estado, o => o.MapFrom(s => s.Estado.ToString()));
+
+        CreateMap<Message, MessageItemViewModel>()
+            .ForMember(d => d.Remitente, o => o.MapFrom(s => s.Remitente.ToString()));
     }
 }

@@ -39,6 +39,8 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IAgentService, AgentService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAdministradorService, AdministradorService>();
+        services.AddScoped<IFavoriteService, FavoriteService>();
+        services.AddScoped<IMessageService, MessageService>();
 
         // Un solo registro, apuntando al ensamblado de Core: carga todos los
         // Profile que haya ahi (WebApiMappingProfile y WebAppMappingProfile).

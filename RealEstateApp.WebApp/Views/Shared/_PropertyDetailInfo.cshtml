@@ -1,0 +1,91 @@
+@model PropertyDetailViewModel
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>@Model.TipoPropiedad &middot; @Model.TipoVenta</h1>
+        <p class="text-muted">Código: @Model.Codigo</p>
+
+        @if (Model.Imagenes.Count > 0)
+        {
+            <div id="carouselPropiedad" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (var i = 0; i < Model.Imagenes.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@Model.Imagenes[i]" class="d-block w-100" style="max-height:420px;object-fit:cover;" alt="Imagen @(i + 1) de @Model.Codigo" />
+                        </div>
+                    }
+                </div>
+                @if (Model.Imagenes.Count > 1)
+                {
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPropiedad" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPropiedad" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center mb-3" style="height:300px;">
+                <span class="text-muted">Sin imágenes</span>
+            </div>
+        }
+
+        <dl class="row">
+            <dt class="col-sm-3">Precio</dt>
+            <dd class="col-sm-9">RD$@Model.Precio.ToString("N0")</dd>
+
+            <dt class="col-sm-3">Habitaciones</dt>
+            <dd class="col-sm-9">@Model.CantidadHabitaciones</dd>
+
+            <dt class="col-sm-3">Baños</dt>
+            <dd class="col-sm-9">@Model.CantidadBanos</dd>
+
+            <dt class="col-sm-3">Tamaño del terreno</dt>
+            <dd class="col-sm-9">@Model.TamanoTerreno.ToString("N0") m&sup2;</dd>
+
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
+
+            <dt class="col-sm-3">Mejoras</dt>
+            <dd class="col-sm-9">
+                @if (Model.Mejoras.Count > 0)
+                {
+                    <ul class="mb-0">
+                        @foreach (var mejora in Model.Mejoras)
+                        {
+                            <li>@mejora</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span class="text-muted">Ninguna</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                @if (!string.IsNullOrEmpty(Model.FotoAgente))
+                {
+                    <img src="@Model.FotoAgente" class="rounded-circle mb-3" style="width:100px;height:100px;object-fit:cover;" alt="@Model.NombreAgente" />
+                }
+                <h5 class="card-title">@Model.NombreAgente</h5>
+                <p class="card-text">
+                    Teléfono: @Model.TelefonoAgente<br />
+                    Correo: @Model.CorreoAgente
+                </p>
+                <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@Model.AgentId" class="btn btn-outline-primary">
+                    Ver más propiedades de este agente
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

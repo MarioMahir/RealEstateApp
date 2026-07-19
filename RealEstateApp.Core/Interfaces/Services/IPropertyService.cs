@@ -26,4 +26,7 @@ public interface IPropertyService : IGenericService<Property>
 
     // Home del agente (Etapa 2, contenido minimo -- Etapa 4 agrega alta/edicion).
     Task<List<Property>> GetAllByAgentAsync(string agentId);
+
+    // "Mis propiedades" (Cliente, Etapa 3): favoritos que siguen Disponible.
+    Task<List<Property>> GetFavoritesByClienteAsync(string clienteId);
 }

@@ -1,4 +1,7 @@
 @model PropertyBrowseViewModel
+@{
+    var contextoCliente = ViewData["ContextoCliente"] as bool? == true;
+}
 
 @if (!string.IsNullOrEmpty(Model.Mensaje))
 {
@@ -32,7 +35,17 @@
                         </p>
                     </div>
                     <div class="card-footer bg-transparent">
-                        <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedad.Id" class="btn btn-outline-primary w-100">Ver detalle</a>
+                        @if (contextoCliente)
+                        {
+                            <form asp-controller="Cliente" asp-action="ToggleFavorito" method="post" class="mb-2">
+                                <input type="hidden" name="propertyId" value="@propiedad.Id" />
+                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                <button type="submit" class="btn btn-sm w-100 @(propiedad.EsFavorito ? "btn-danger" : "btn-outline-danger")">
+                                    @(propiedad.EsFavorito ? "Quitar de favoritos" : "Agregar a favoritos")
+                                </button>
+                            </form>
+                        }
+                        <a asp-controller="@(contextoCliente ? "Cliente" : "Home")" asp-action="@(contextoCliente ? "Detalle" : "Details")" asp-route-id="@propiedad.Id" class="btn btn-outline-primary w-100">Ver detalle</a>
                     </div>
                 </div>
             </div>

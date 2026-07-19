@@ -16,4 +16,7 @@ public class PropertyListItemViewModel
 
     // Solo se usa en el Home del agente (propias, Disponible + Vendida).
     public string Estado { get; set; } = string.Empty;
+
+    // Solo se usa en pantallas del Cliente (Home del cliente, Mis propiedades).
+    public bool EsFavorito { get; set; }
 }

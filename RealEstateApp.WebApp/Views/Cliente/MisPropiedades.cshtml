@@ -1,0 +1,8 @@
+@model PropertyBrowseViewModel
+@{
+    ViewData["Title"] = "Mis propiedades";
+}
+
+<h1 class="mb-4">Mis propiedades</h1>
+
+@await Html.PartialAsync("_PropertyResultsPartial", Model)

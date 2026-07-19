@@ -1,0 +1,11 @@
+@model SendMessageViewModel
+
+<form asp-controller="Cliente" asp-action="EnviarMensaje" method="post">
+    <input type="hidden" asp-for="PropertyId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-2">
+        <textarea asp-for="Texto" class="form-control" rows="2" placeholder="Escribe tu mensaje..."></textarea>
+        <span asp-validation-for="Texto" class="text-danger small"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+</form>

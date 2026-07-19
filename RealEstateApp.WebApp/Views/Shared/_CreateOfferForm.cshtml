@@ -1,0 +1,13 @@
+@model CreateOfferViewModel
+
+<form asp-controller="Cliente" asp-action="CrearOferta" method="post" class="row g-2 align-items-end">
+    <input type="hidden" asp-for="PropertyId" />
+    <div class="col-8">
+        <label asp-for="Monto" class="form-label"></label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger small"></span>
+    </div>
+    <div class="col-4 d-grid">
+        <button type="submit" class="btn btn-primary">Ofertar</button>
+    </div>
+</form>

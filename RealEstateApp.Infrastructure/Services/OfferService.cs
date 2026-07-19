@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Entities;
 using RealEstateApp.Core.Enums;
 using RealEstateApp.Core.Interfaces.Repositories;
 using RealEstateApp.Core.Interfaces.Services;
+using RealEstateApp.Core.Models;
 
 namespace RealEstateApp.Infrastructure.Services;
 
@@ -53,4 +55,36 @@ public class OfferService : GenericService<Offer>, IOfferService
         Repository.Update(offer);
         await UnitOfWork.SaveChangesAsync();
     }
+
+    public async Task<OfferCreationResult> CreateOfferAsync(string clienteId, int propertyId, decimal monto)
+    {
+        var property = await _propertyRepository.GetByIdAsync(propertyId);
+        if (property is null || property.Estado != PropertyStatus.Disponible)
+            return new OfferCreationResult { Status = OfferCreationStatus.PropertyNotAvailable };
+
+        var tienePendiente = Repository.Query()
+            .Any(o => o.ClienteId == clienteId && o.PropertyId == propertyId && o.Estado == OfferStatus.Pendiente);
+        if (tienePendiente)
+            return new OfferCreationResult { Status = OfferCreationStatus.DuplicatePending };
+
+        var offer = new Offer
+        {
+            ClienteId = clienteId,
+            PropertyId = propertyId,
+            Monto = monto,
+            Fecha = DateTime.Now,
+            Estado = OfferStatus.Pendiente
+        };
+
+        await Repository.AddAsync(offer);
+        await UnitOfWork.SaveChangesAsync();
+
+        return new OfferCreationResult { Status = OfferCreationStatus.Success, Offer = offer };
+    }
+
+    public Task<List<Offer>> GetByClienteAndPropertyAsync(string clienteId, int propertyId) =>
+        Repository.Query()
+            .Where(o => o.ClienteId == clienteId && o.PropertyId == propertyId)
+            .OrderByDescending(o => o.Fecha)
+            .ToListAsync();
 }

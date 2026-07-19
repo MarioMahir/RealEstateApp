@@ -69,6 +69,12 @@ public class PropertyService : GenericService<Property>, IPropertyService
             .OrderByDescending(p => p.FechaCreacion)
             .ToListAsync();
 
+    public async Task<List<Property>> GetFavoritesByClienteAsync(string clienteId) =>
+        await WithDetails(Repository.Query())
+            .Where(p => p.Estado == PropertyStatus.Disponible && p.Favorites.Any(f => f.ClienteId == clienteId))
+            .OrderByDescending(p => p.FechaCreacion)
+            .ToListAsync();
+
     // Las consultas genericas (GetAllAsync/GetByIdAsync heredados) no cargan
     // relaciones; PropertyDto/los ViewModels necesitan PropertyType/SaleType/
     // Agent/Imagenes/Mejoras, asi que estas consultas especificas si las
