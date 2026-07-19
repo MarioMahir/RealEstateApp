@@ -1,0 +1,73 @@
+@model AdministradorHomeViewModel
+@{
+    ViewData["Title"] = "Home del administrador";
+}
+
+<h1 class="mb-4">Indicadores del sistema</h1>
+
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="col">
+        <div class="card text-center border-primary">
+            <div class="card-body">
+                <h2 class="card-title">@Model.PropiedadesDisponibles</h2>
+                <p class="card-text">Propiedades disponibles</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-secondary">
+            <div class="card-body">
+                <h2 class="card-title">@Model.PropiedadesVendidas</h2>
+                <p class="card-text">Propiedades vendidas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <h2 class="card-title">@Model.AgentesActivos</h2>
+                <p class="card-text">Agentes activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h2 class="card-title">@Model.AgentesInactivos</h2>
+                <p class="card-text">Agentes inactivos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <h2 class="card-title">@Model.ClientesActivos</h2>
+                <p class="card-text">Clientes activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h2 class="card-title">@Model.ClientesInactivos</h2>
+                <p class="card-text">Clientes inactivos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <h2 class="card-title">@Model.DesarrolladoresActivos</h2>
+                <p class="card-text">Desarrolladores activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h2 class="card-title">@Model.DesarrolladoresInactivos</h2>
+                <p class="card-text">Desarrolladores inactivos</p>
+            </div>
+        </div>
+    </div>
+</div>

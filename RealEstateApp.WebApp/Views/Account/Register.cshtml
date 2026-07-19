@@ -1,0 +1,69 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Únete a la app";
+}
+
+<h1 class="mb-4">Únete a la app</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Apellido" class="form-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Telefono" class="form-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NombreUsuario" class="form-label"></label>
+                <input asp-for="NombreUsuario" class="form-control" />
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CorreoElectronico" class="form-label"></label>
+                <input asp-for="CorreoElectronico" class="form-control" />
+                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Contrasena" class="form-label"></label>
+                <input asp-for="Contrasena" class="form-control" />
+                <span asp-validation-for="Contrasena" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmarContrasena" class="form-label"></label>
+                <input asp-for="ConfirmarContrasena" class="form-control" />
+                <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TipoUsuario" class="form-label"></label>
+                <select asp-for="TipoUsuario" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    <option value="@Roles.Cliente">Cliente</option>
+                    <option value="@Roles.Agente">Agente</option>
+                </select>
+                <span asp-validation-for="TipoUsuario" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="foto" class="form-label">Foto de perfil (opcional)</label>
+                <input type="file" id="foto" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Registrarme</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

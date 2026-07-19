@@ -1,0 +1,42 @@
+@model PropertyBrowseViewModel
+
+<form method="get" class="border rounded p-3 mb-4 bg-light">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-2">
+            <label asp-for="Codigo" class="form-label"></label>
+            <input asp-for="Codigo" class="form-control" placeholder="Ej: 123456" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="PropertyTypeId" class="form-label"></label>
+            <select asp-for="PropertyTypeId" class="form-select">
+                <option value="">-- Todos --</option>
+                @foreach (var tipo in Model.TiposPropiedad)
+                {
+                    <option value="@tipo.Value" selected="@(Model.PropertyTypeId.HasValue && Model.PropertyTypeId.Value.ToString() == tipo.Value)">@tipo.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label asp-for="PrecioMinimo" class="form-label"></label>
+            <input asp-for="PrecioMinimo" class="form-control" />
+            <span asp-validation-for="PrecioMinimo" class="text-danger small"></span>
+        </div>
+        <div class="col-md-2">
+            <label asp-for="PrecioMaximo" class="form-label"></label>
+            <input asp-for="PrecioMaximo" class="form-control" />
+            <span asp-validation-for="PrecioMaximo" class="text-danger small"></span>
+        </div>
+        <div class="col-md-1">
+            <label asp-for="CantidadHabitaciones" class="form-label">Habs.</label>
+            <input asp-for="CantidadHabitaciones" class="form-control" />
+        </div>
+        <div class="col-md-1">
+            <label asp-for="CantidadBanos" class="form-label">Baños</label>
+            <input asp-for="CantidadBanos" class="form-control" />
+        </div>
+        <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger mt-2"></div>
+</form>

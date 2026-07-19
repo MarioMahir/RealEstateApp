@@ -1,5 +1,6 @@
 using RealEstateApp.Core.DTOs.Agent;
 using RealEstateApp.Core.DTOs.Property;
+using RealEstateApp.Core.Entities;
 
 namespace RealEstateApp.Core.Interfaces.Services;
 
@@ -15,4 +16,11 @@ public interface IAgentService
 
     // false = el agente no existe.
     Task<bool> ChangeStatusAsync(string agentId, bool activo);
+
+    // Superficie publica de la WebApp (pantalla "Agentes"): solo Activos,
+    // orden alfabetico, con busqueda opcional por nombre/apellido.
+    Task<List<ApplicationUser>> GetActiveAgentsAsync(string? nombreBusqueda);
+
+    // null = no existe o esta Inactivo (la pantalla publica lo trata igual).
+    Task<ApplicationUser?> GetActiveAgentByIdAsync(string id);
 }

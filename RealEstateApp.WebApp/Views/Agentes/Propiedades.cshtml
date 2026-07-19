@@ -1,0 +1,21 @@
+@model AgentPropertiesViewModel
+@{
+    ViewData["Title"] = $"Propiedades de {Model.NombreAgente}";
+}
+
+<div class="d-flex align-items-center mb-4">
+    @if (!string.IsNullOrEmpty(Model.FotoAgente))
+    {
+        <img src="@Model.FotoAgente" class="rounded-circle me-3" style="width:64px;height:64px;object-fit:cover;" alt="@Model.NombreAgente" />
+    }
+    <h1 class="mb-0">Propiedades de @Model.NombreAgente</h1>
+</div>
+
+@await Html.PartialAsync("_PropertyFilterForm", Model.Propiedades)
+@await Html.PartialAsync("_PropertyResultsPartial", Model.Propiedades)
+
+<a asp-controller="Agentes" asp-action="Index" class="btn btn-secondary mt-3">Volver a agentes</a>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

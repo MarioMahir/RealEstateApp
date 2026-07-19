@@ -5,7 +5,7 @@ using RealEstateApp.Shared;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddSharedServices(builder.Configuration);
+builder.Services.AddSharedServices(builder.Configuration, builder.Environment.WebRootPath);
 
 // AddIdentity (dentro de AddInfrastructure) ya deja el esquema de cookies de
 // Identity como esquema de autenticacion por defecto -- exactamente lo que

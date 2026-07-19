@@ -1,0 +1,49 @@
+@model List<AgentListItemViewModel>
+@{
+    ViewData["Title"] = "Agentes";
+    var nombreBusqueda = ViewData["NombreBusqueda"] as string;
+}
+
+<h1 class="mb-4">Nuestros agentes</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre o apellido" value="@nombreBusqueda" />
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        No se encontraron agentes activos@(string.IsNullOrEmpty(nombreBusqueda) ? "." : " con ese nombre.")
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @foreach (var agente in Model)
+        {
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(agente.FotoUrl))
+                        {
+                            <img src="@agente.FotoUrl" class="rounded-circle mb-3" style="width:96px;height:96px;object-fit:cover;" alt="@agente.Nombre @agente.Apellido" />
+                        }
+                        else
+                        {
+                            <div class="bg-secondary bg-opacity-25 rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:96px;height:96px;">
+                                <span class="text-muted small">Sin foto</span>
+                            </div>
+                        }
+                        <h5 class="card-title">@agente.Nombre @agente.Apellido</h5>
+                        <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@agente.Id" class="btn btn-outline-primary">Ver propiedades</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

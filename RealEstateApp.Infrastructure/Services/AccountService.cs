@@ -46,4 +46,20 @@ public class AccountService : IAccountService
         await _userManager.AddToRoleAsync(user, role);
         return new RegisterResult { Succeeded = true };
     }
+
+    public Task<ApplicationUser?> FindByIdAsync(string userId) => _userManager.FindByIdAsync(userId)!;
+
+    public Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user) =>
+        _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+    public async Task<bool> ConfirmEmailAndActivateAsync(ApplicationUser user, string token)
+    {
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+            return false;
+
+        user.Activo = true;
+        await _userManager.UpdateAsync(user);
+        return true;
+    }
 }

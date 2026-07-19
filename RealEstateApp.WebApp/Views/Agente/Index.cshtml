@@ -1,0 +1,47 @@
+@model List<PropertyListItemViewModel>
+@{
+    ViewData["Title"] = "Mis propiedades";
+    var mensaje = ViewData["Mensaje"] as string;
+}
+
+<h1 class="mb-4">Mis propiedades</h1>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">@mensaje</div>
+}
+
+@if (Model.Count > 0)
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var propiedad in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                    {
+                        <img src="@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height:200px;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height:200px;">
+                            <span class="text-muted">Sin imagen</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @propiedad.TipoPropiedad &middot; @propiedad.TipoVenta
+                            <span class="badge @(propiedad.Estado == "Disponible" ? "bg-success" : "bg-secondary")">@propiedad.Estado</span>
+                        </h5>
+                        <p class="card-text">
+                            Código: @propiedad.Codigo<br />
+                            Precio: RD$@propiedad.Precio.ToString("N0")<br />
+                            @propiedad.CantidadHabitaciones hab. / @propiedad.CantidadBanos baños<br />
+                            Terreno: @propiedad.TamanoTerreno.ToString("N0") m&sup2;
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

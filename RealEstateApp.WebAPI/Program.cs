@@ -10,7 +10,7 @@ using RealEstateApp.WebAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddSharedServices(builder.Configuration);
+builder.Services.AddSharedServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 // AddIdentity (dentro de AddInfrastructure) deja el esquema de cookies de

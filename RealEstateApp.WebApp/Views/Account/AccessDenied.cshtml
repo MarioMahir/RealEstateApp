@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Acceso denegado";
+
+    string controlador;
+    string etiqueta;
+
+    if (User.IsInRole(Roles.Administrador))
+    {
+        controlador = "Administrador";
+        etiqueta = "Ir al Home del administrador";
+    }
+    else if (User.IsInRole(Roles.Agente))
+    {
+        controlador = "Agente";
+        etiqueta = "Ir al Home del agente";
+    }
+    else
+    {
+        controlador = "Home";
+        etiqueta = "Ir al Home";
+    }
+}
+
+<h1 class="text-danger mb-4">Acceso denegado</h1>
+<p>No tiene permisos para acceder a la sección solicitada.</p>
+
+<a asp-controller="@controlador" asp-action="Index" class="btn btn-primary">@etiqueta</a>

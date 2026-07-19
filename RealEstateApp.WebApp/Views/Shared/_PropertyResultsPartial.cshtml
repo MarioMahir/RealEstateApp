@@ -1,0 +1,41 @@
+@model PropertyBrowseViewModel
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+@if (Model.Propiedades.Count > 0)
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var propiedad in Model.Propiedades)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                    {
+                        <img src="@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height:200px;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height:200px;">
+                            <span class="text-muted">Sin imagen</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@propiedad.TipoPropiedad &middot; @propiedad.TipoVenta</h5>
+                        <p class="card-text">
+                            Código: @propiedad.Codigo<br />
+                            Precio: RD$@propiedad.Precio.ToString("N0")<br />
+                            @propiedad.CantidadHabitaciones hab. / @propiedad.CantidadBanos baños<br />
+                            Terreno: @propiedad.TamanoTerreno.ToString("N0") m&sup2;
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedad.Id" class="btn btn-outline-primary w-100">Ver detalle</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

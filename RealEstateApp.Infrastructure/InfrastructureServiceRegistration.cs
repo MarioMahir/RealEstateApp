@@ -38,10 +38,10 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IPropertyService, PropertyService>();
         services.AddScoped<IAgentService, AgentService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IAdministradorService, AdministradorService>();
 
         // Un solo registro, apuntando al ensamblado de Core: carga todos los
-        // Profile que haya ahi (WebApiMappingProfile hoy; WebAppMappingProfile
-        // se suma en una etapa futura sin tocar este archivo).
+        // Profile que haya ahi (WebApiMappingProfile y WebAppMappingProfile).
         services.AddAutoMapper(typeof(Core.Mappings.WebApiMappingProfile).Assembly);
 
         return services;

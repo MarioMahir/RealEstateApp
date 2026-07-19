@@ -14,4 +14,12 @@ public interface IAccountService
     Task<bool> UsernameExistsAsync(string username);
     Task<bool> CedulaExistsAsync(string cedula);
     Task<RegisterResult> RegisterAsync(ApplicationUser user, string password, string role);
+
+    // Activacion de cuenta de Cliente (correo). Reutiliza el generador de
+    // tokens de ASP.NET Identity en vez de inventar uno propio; el flag de
+    // negocio "Activo" (no "EmailConfirmed") sigue siendo lo unico que el
+    // login revisa.
+    Task<ApplicationUser?> FindByIdAsync(string userId);
+    Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);
+    Task<bool> ConfirmEmailAndActivateAsync(ApplicationUser user, string token);
 }

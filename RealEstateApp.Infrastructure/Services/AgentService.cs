@@ -70,6 +70,28 @@ public class AgentService : IAgentService
         return true;
     }
 
+    public async Task<List<ApplicationUser>> GetActiveAgentsAsync(string? nombreBusqueda)
+    {
+        var agentes = await _userManager.GetUsersInRoleAsync(Roles.Agente);
+        var query = agentes.Where(a => a.Activo);
+
+        if (!string.IsNullOrWhiteSpace(nombreBusqueda))
+        {
+            var texto = nombreBusqueda.Trim();
+            query = query.Where(a =>
+                a.Nombre.Contains(texto, StringComparison.OrdinalIgnoreCase) ||
+                a.Apellido.Contains(texto, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return query.OrderBy(a => a.Nombre).ThenBy(a => a.Apellido).ToList();
+    }
+
+    public async Task<ApplicationUser?> GetActiveAgentByIdAsync(string id)
+    {
+        var user = await GetAgentUserOrNullAsync(id);
+        return user is { Activo: true } ? user : null;
+    }
+
     private async Task<ApplicationUser?> GetAgentUserOrNullAsync(string id)
     {
         var user = await _userManager.FindByIdAsync(id);

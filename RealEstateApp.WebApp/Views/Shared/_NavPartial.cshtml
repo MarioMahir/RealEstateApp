@@ -1,0 +1,33 @@
+@{
+    var esCliente = User.IsInRole("Cliente");
+    var esAgente = User.IsInRole("Agente");
+    var esAdministrador = User.IsInRole("Administrador");
+}
+<ul class="navbar-nav flex-grow-1">
+    @if (!User.Identity!.IsAuthenticated)
+    {
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Únete a la app</a></li>
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Iniciar sesión</a></li>
+    }
+    else if (esCliente)
+    {
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
+    }
+    else if (esAgente)
+    {
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agente" asp-action="Index">Home del agente</a></li>
+    }
+    else if (esAdministrador)
+    {
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Administrador" asp-action="Index">Home del administrador</a></li>
+    }
+</ul>
+@if (User.Identity!.IsAuthenticated)
+{
+    <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex">
+        <button type="submit" class="nav-link text-dark btn btn-link">Cerrar sesión</button>
+    </form>
+}
