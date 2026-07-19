@@ -26,6 +26,19 @@
     else if (esAdministrador)
     {
         <li class="nav-item"><a class="nav-link text-dark" asp-controller="Administrador" asp-action="Index">Home del administrador</a></li>
+        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Administrador" asp-action="Agentes">Listado de los agentes</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="menuMantenimientos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Mantenimientos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="menuMantenimientos">
+                <li><a class="dropdown-item" asp-controller="MantenimientoAdministradores" asp-action="Index">Administradores</a></li>
+                <li><a class="dropdown-item" asp-controller="MantenimientoDesarrolladores" asp-action="Index">Desarrolladores</a></li>
+                <li><a class="dropdown-item" asp-controller="MantenimientoTipoPropiedades" asp-action="Index">Tipo de propiedades</a></li>
+                <li><a class="dropdown-item" asp-controller="MantenimientoTipoVentas" asp-action="Index">Tipo de ventas</a></li>
+                <li><a class="dropdown-item" asp-controller="MantenimientoMejoras" asp-action="Index">Mejoras</a></li>
+            </ul>
+        </li>
     }
 </ul>
 @if (User.Identity!.IsAuthenticated)

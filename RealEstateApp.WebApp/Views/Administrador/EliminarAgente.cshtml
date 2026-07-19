@@ -1,0 +1,25 @@
+@model AgentAdminListItemViewModel
+@{
+    ViewData["Title"] = "Eliminar agente";
+}
+
+<h1 class="mb-4">Eliminar agente</h1>
+
+<div class="alert alert-warning">
+    ¿Está seguro que desea eliminar este agente y todas sus propiedades? Esta acción eliminará también las imágenes,
+    ofertas, conversaciones y favoritos de clientes relacionados con sus propiedades, y no se puede deshacer.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-2">Nombre</dt>
+    <dd class="col-sm-10">@Model.Nombre @Model.Apellido</dd>
+    <dt class="col-sm-2">Correo</dt>
+    <dd class="col-sm-10">@Model.Correo</dd>
+    <dt class="col-sm-2">Propiedades</dt>
+    <dd class="col-sm-10">@Model.CantidadPropiedades</dd>
+</dl>
+
+<form asp-controller="Administrador" asp-action="EliminarAgente" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="btn btn-danger">Aceptar</button>
+    <a asp-controller="Administrador" asp-action="Agentes" class="btn btn-secondary">Cancelar</a>
+</form>

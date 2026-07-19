@@ -23,4 +23,11 @@ public interface IAgentService
 
     // null = no existe o esta Inactivo (la pantalla publica lo trata igual).
     Task<ApplicationUser?> GetActiveAgentByIdAsync(string id);
+
+    // "Listado de los agentes" (Administrador, Etapa 5): elimina primero las
+    // Property del agente (cascada real via FK hacia Property) y solo despues
+    // el ApplicationUser -- el FK Agente->Property es Restrict a proposito
+    //, asi que este orden se resuelve en
+    // codigo, no en la base de datos. false = el agente no existe.
+    Task<bool> DeleteAgentAsync(string agentId);
 }

@@ -75,6 +75,13 @@ public class MantenimientoPropiedadesController : Controller
             return View(modelo);
         }
 
+        await ValidarReferenciasAsync(modelo);
+        if (!ModelState.IsValid)
+        {
+            await CargarCatalogosAsync(modelo);
+            return View(modelo);
+        }
+
         List<string> urls;
         try
         {
@@ -154,6 +161,13 @@ public class MantenimientoPropiedadesController : Controller
             return View(modelo);
         }
 
+        await ValidarReferenciasAsync(modelo);
+        if (!ModelState.IsValid)
+        {
+            await PrepararReedicionAsync(modelo, existente);
+            return View(modelo);
+        }
+
         List<string> urls;
         try
         {
@@ -209,6 +223,27 @@ public class MantenimientoPropiedadesController : Controller
             : "La propiedad solicitada no existe o ya no se puede eliminar.";
 
         return RedirectToAction(nameof(Index));
+    }
+
+    // Defensa contra una condicion de carrera real (no solo teorica): el
+    // formulario se llena con el catalogo vigente al momento de cargarlo, pero
+    // un Administrador podria eliminar un tipo de propiedad/venta/mejora
+    // mientras el agente todavia tiene el formulario abierto. Sin esto, el
+    // INSERT/UPDATE fallaria con una FK violation no manejada (500) en vez de
+    // un mensaje de validacion normal.
+    private async Task ValidarReferenciasAsync(PropertyFormViewModel modelo)
+    {
+        var tiposValidos = (await _propertyTypeService.GetAllAsync()).Select(t => t.Id).ToHashSet();
+        if (modelo.PropertyTypeId.HasValue && !tiposValidos.Contains(modelo.PropertyTypeId.Value))
+            ModelState.AddModelError(nameof(modelo.PropertyTypeId), "El tipo de propiedad seleccionado ya no existe.");
+
+        var ventasValidas = (await _saleTypeService.GetAllAsync()).Select(t => t.Id).ToHashSet();
+        if (modelo.SaleTypeId.HasValue && !ventasValidas.Contains(modelo.SaleTypeId.Value))
+            ModelState.AddModelError(nameof(modelo.SaleTypeId), "El tipo de venta seleccionado ya no existe.");
+
+        var mejorasValidas = (await _improvementService.GetAllAsync()).Select(m => m.Id).ToHashSet();
+        if (modelo.ImprovementIds.Any(id => !mejorasValidas.Contains(id)))
+            ModelState.AddModelError(string.Empty, "Una o más mejoras seleccionadas ya no existen. Vuelva a intentarlo.");
     }
 
     private async Task<List<string>> GuardarImagenesAsync(List<IFormFile> archivos)

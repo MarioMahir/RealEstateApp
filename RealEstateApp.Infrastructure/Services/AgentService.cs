@@ -14,15 +14,18 @@ public class AgentService : IAgentService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IGenericRepository<Property> _propertyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public AgentService(
         UserManager<ApplicationUser> userManager,
         IGenericRepository<Property> propertyRepository,
+        IUnitOfWork unitOfWork,
         IMapper mapper)
     {
         _userManager = userManager;
         _propertyRepository = propertyRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -90,6 +93,24 @@ public class AgentService : IAgentService
     {
         var user = await GetAgentUserOrNullAsync(id);
         return user is { Activo: true } ? user : null;
+    }
+
+    public async Task<bool> DeleteAgentAsync(string agentId)
+    {
+        var user = await GetAgentUserOrNullAsync(agentId);
+        if (user is null) return false;
+
+        // Borra primero las Property del agente: eso SI cascada (a nivel de
+        // FK real) imagenes/ofertas/mensajes/favoritos/mejoras. El FK
+        // Agente->Property es Restrict a proposito (ver Modelo de dominio en
+        // la guia del proyecto), asi que el ApplicationUser solo puede borrarse despues.
+        var properties = await _propertyRepository.Query().Where(p => p.AgentId == agentId).ToListAsync();
+        foreach (var property in properties)
+            _propertyRepository.Delete(property);
+        await _unitOfWork.SaveChangesAsync();
+
+        var resultado = await _userManager.DeleteAsync(user);
+        return resultado.Succeeded;
     }
 
     private async Task<ApplicationUser?> GetAgentUserOrNullAsync(string id)
