@@ -5,11 +5,13 @@ using Microsoft.OpenApi.Models;
 using RealEstateApp.Infrastructure;
 using RealEstateApp.Infrastructure.Seed;
 using RealEstateApp.Shared;
+using RealEstateApp.WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSharedServices(builder.Configuration);
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 // AddIdentity (dentro de AddInfrastructure) deja el esquema de cookies de
 // Identity como esquema por defecto. La WebAPI lo sobrescribe explicitamente a

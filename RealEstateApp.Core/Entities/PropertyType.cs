@@ -1,6 +1,8 @@
+using RealEstateApp.Core.Interfaces.Entities;
+
 namespace RealEstateApp.Core.Entities;
 
-public class PropertyType
+public class PropertyType : ICatalogItem
 {
     public int Id { get; set; }
     public string Nombre { get; set; } = string.Empty;

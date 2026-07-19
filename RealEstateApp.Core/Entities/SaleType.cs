@@ -1,6 +1,8 @@
+using RealEstateApp.Core.Interfaces.Entities;
+
 namespace RealEstateApp.Core.Entities;
 
-public class SaleType
+public class SaleType : ICatalogItem
 {
     public int Id { get; set; }
     public string Nombre { get; set; } = string.Empty;
