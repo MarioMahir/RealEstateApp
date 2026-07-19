@@ -14,7 +14,7 @@ public class MantenimientoTipoVentasController : CatalogMaintenanceControllerBas
     }
 
     protected override string Titulo => "Mantenimiento de tipo de ventas";
-    protected override string TituloNuevo => "Nuevo tipo de venta";
+    protected override string TituloNuevo => "Crear tipo de venta";
     protected override string TituloEditar => "Editar tipo de venta";
     protected override string EmptyListMessage => "No existen tipos de ventas registrados.";
     protected override string NotFoundMessage => "El tipo de venta seleccionado no existe.";

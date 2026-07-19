@@ -32,24 +32,31 @@ public class PropertyService : GenericService<Property>, IPropertyService
     public async Task<Property?> GetByCodeWithDetailsAsync(string codigo) =>
         await WithDetails(Repository.Query()).FirstOrDefaultAsync(p => p.Codigo == codigo);
 
+    // Las 4 consultas "publicas" de abajo comparten la misma regla de
+    // visibilidad: ademas de Estado == Disponible, la propiedad solo debe
+    // mostrarse si el agente dueno sigue Activo (inactivar un agente debe
+    // ocultar sus propiedades disponibles de toda seccion publica/cliente,
+    // no solo del listado publico de agentes).
     public async Task<List<Property>> SearchAvailableAsync(PropertyFilterCriteria criteria)
     {
-        var query = ApplyFilters(WithDetails(Repository.Query()).Where(p => p.Estado == PropertyStatus.Disponible), criteria);
+        var query = ApplyFilters(
+            WithDetails(Repository.Query()).Where(p => p.Estado == PropertyStatus.Disponible && p.Agent.Activo),
+            criteria);
         return await query.OrderByDescending(p => p.FechaCreacion).ToListAsync();
     }
 
     public async Task<Property?> GetAvailableByIdAsync(int id) =>
         await WithDetails(Repository.Query())
-            .FirstOrDefaultAsync(p => p.Id == id && p.Estado == PropertyStatus.Disponible);
+            .FirstOrDefaultAsync(p => p.Id == id && p.Estado == PropertyStatus.Disponible && p.Agent.Activo);
 
     public async Task<Property?> GetAvailableByCodeAsync(string codigo) =>
         await WithDetails(Repository.Query())
-            .FirstOrDefaultAsync(p => p.Codigo == codigo && p.Estado == PropertyStatus.Disponible);
+            .FirstOrDefaultAsync(p => p.Codigo == codigo && p.Estado == PropertyStatus.Disponible && p.Agent.Activo);
 
     public async Task<List<Property>> GetAvailableByAgentAsync(string agentId, PropertyFilterCriteria? criteria = null)
     {
         var query = WithDetails(Repository.Query())
-            .Where(p => p.AgentId == agentId && p.Estado == PropertyStatus.Disponible);
+            .Where(p => p.AgentId == agentId && p.Estado == PropertyStatus.Disponible && p.Agent.Activo);
         if (criteria is not null)
             query = ApplyFilters(query, criteria);
 
@@ -80,7 +87,7 @@ public class PropertyService : GenericService<Property>, IPropertyService
 
     public async Task<List<Property>> GetFavoritesByClienteAsync(string clienteId) =>
         await WithDetails(Repository.Query())
-            .Where(p => p.Estado == PropertyStatus.Disponible && p.Favorites.Any(f => f.ClienteId == clienteId))
+            .Where(p => p.Estado == PropertyStatus.Disponible && p.Agent.Activo && p.Favorites.Any(f => f.ClienteId == clienteId))
             .OrderByDescending(p => p.FechaCreacion)
             .ToListAsync();
 

@@ -19,7 +19,7 @@ public class MantenimientoMejorasController : CatalogMaintenanceControllerBase<I
     }
 
     protected override string Titulo => "Mantenimiento de mejoras";
-    protected override string TituloNuevo => "Nueva mejora";
+    protected override string TituloNuevo => "Crear mejora";
     protected override string TituloEditar => "Editar mejora";
     protected override string EmptyListMessage => "No existen mejoras registradas.";
     protected override string NotFoundMessage => "La mejora seleccionada no existe.";

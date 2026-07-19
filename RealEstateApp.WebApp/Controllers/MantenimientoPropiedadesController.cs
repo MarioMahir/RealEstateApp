@@ -49,7 +49,7 @@ public class MantenimientoPropiedadesController : Controller
         var modelo = _mapper.Map<List<PropertyListItemViewModel>>(propiedades);
 
         if (modelo.Count == 0)
-            ViewData["Mensaje"] = "Todavía no tiene propiedades registradas.";
+            ViewData["Mensaje"] = "No tiene propiedades disponibles registradas en este momento.";
 
         return View(modelo);
     }
@@ -57,6 +57,24 @@ public class MantenimientoPropiedadesController : Controller
     [HttpGet]
     public async Task<IActionResult> Crear()
     {
+        if (!(await _propertyTypeService.GetAllAsync()).Any())
+        {
+            TempData["Error"] = "No existen tipos de propiedades registrados. Debe crear al menos un tipo de propiedad antes de registrar una propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (!(await _saleTypeService.GetAllAsync()).Any())
+        {
+            TempData["Error"] = "No existen tipos de ventas registrados. Debe crear al menos un tipo de venta antes de registrar una propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (!(await _improvementService.GetAllAsync()).Any())
+        {
+            TempData["Error"] = "No existen mejoras registradas. Debe crear al menos una mejora antes de registrar una propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
         var modelo = new PropertyFormViewModel();
         await CargarCatalogosAsync(modelo);
         return View(modelo);
@@ -66,8 +84,10 @@ public class MantenimientoPropiedadesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Crear(PropertyFormViewModel modelo, List<IFormFile> nuevasImagenes)
     {
-        if (nuevasImagenes.Count == 0 || nuevasImagenes.Count > 4)
-            ModelState.AddModelError(string.Empty, "Debe adjuntar entre 1 y 4 imágenes.");
+        if (nuevasImagenes.Count == 0)
+            ModelState.AddModelError(string.Empty, "Debe cargar al menos una imagen de la propiedad.");
+        else if (nuevasImagenes.Count > 4)
+            ModelState.AddModelError(string.Empty, "Solo se permite registrar hasta 4 imágenes por propiedad.");
 
         if (!ModelState.IsValid)
         {
@@ -106,19 +126,31 @@ public class MantenimientoPropiedadesController : Controller
             Descripcion = modelo.Descripcion
         };
 
-        var creada = await _propertyService.CreatePropertyAsync(propiedad, modelo.ImprovementIds, urls);
+        await _propertyService.CreatePropertyAsync(propiedad, modelo.ImprovementIds, urls);
 
-        TempData["Mensaje"] = $"La propiedad fue creada correctamente con el código {creada.Codigo}.";
+        TempData["Mensaje"] = "La propiedad fue creada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
     public async Task<IActionResult> Editar(int id)
     {
-        var propiedad = await _propertyService.GetByIdForAgentAsync(id, AgentId);
-        if (propiedad is null || propiedad.Estado != PropertyStatus.Disponible)
+        var propiedad = await _propertyService.GetByIdWithDetailsAsync(id);
+        if (propiedad is null)
         {
-            TempData["Error"] = "La propiedad solicitada no existe o ya no se puede editar.";
+            TempData["Error"] = "La propiedad solicitada no existe.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (propiedad.AgentId != AgentId)
+        {
+            TempData["Error"] = "No tiene permisos para modificar esta propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (propiedad.Estado != PropertyStatus.Disponible)
+        {
+            TempData["Error"] = "No se puede modificar una propiedad que ya fue vendida.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -144,16 +176,30 @@ public class MantenimientoPropiedadesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(int id, PropertyFormViewModel modelo, List<IFormFile> nuevasImagenes)
     {
-        var existente = await _propertyService.GetByIdForAgentAsync(id, AgentId);
-        if (existente is null || existente.Estado != PropertyStatus.Disponible)
+        var existente = await _propertyService.GetByIdWithDetailsAsync(id);
+        if (existente is null)
         {
-            TempData["Error"] = "La propiedad solicitada no existe o ya no se puede editar.";
+            TempData["Error"] = "La propiedad solicitada no existe.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (existente.AgentId != AgentId)
+        {
+            TempData["Error"] = "No tiene permisos para modificar esta propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (existente.Estado != PropertyStatus.Disponible)
+        {
+            TempData["Error"] = "No se puede modificar una propiedad que ya fue vendida.";
             return RedirectToAction(nameof(Index));
         }
 
         var totalImagenes = existente.Images.Count - modelo.ImagenesAEliminar.Count + nuevasImagenes.Count;
-        if (totalImagenes < 1 || totalImagenes > 4)
-            ModelState.AddModelError(string.Empty, "La propiedad debe tener entre 1 y 4 imágenes.");
+        if (totalImagenes < 1)
+            ModelState.AddModelError(string.Empty, "Debe cargar al menos una imagen de la propiedad.");
+        else if (totalImagenes > 4)
+            ModelState.AddModelError(string.Empty, "Solo se permite registrar hasta 4 imágenes por propiedad.");
 
         if (!ModelState.IsValid)
         {
@@ -202,10 +248,22 @@ public class MantenimientoPropiedadesController : Controller
     [HttpGet]
     public async Task<IActionResult> Eliminar(int id)
     {
-        var propiedad = await _propertyService.GetByIdForAgentAsync(id, AgentId);
-        if (propiedad is null || propiedad.Estado != PropertyStatus.Disponible)
+        var propiedad = await _propertyService.GetByIdWithDetailsAsync(id);
+        if (propiedad is null)
         {
-            TempData["Error"] = "La propiedad solicitada no existe o ya no se puede eliminar.";
+            TempData["Error"] = "La propiedad solicitada no existe.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (propiedad.AgentId != AgentId)
+        {
+            TempData["Error"] = "No tiene permisos para eliminar esta propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (propiedad.Estado != PropertyStatus.Disponible)
+        {
+            TempData["Error"] = "No se puede eliminar una propiedad que ya fue vendida.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -217,11 +275,27 @@ public class MantenimientoPropiedadesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EliminarConfirmado(int id)
     {
-        var eliminada = await _propertyService.DeletePropertyAsync(id, AgentId);
-        TempData[eliminada ? "Mensaje" : "Error"] = eliminada
-            ? "La propiedad fue eliminada correctamente."
-            : "La propiedad solicitada no existe o ya no se puede eliminar.";
+        var propiedad = await _propertyService.GetByIdWithDetailsAsync(id);
+        if (propiedad is null)
+        {
+            TempData["Error"] = "La propiedad solicitada no existe.";
+            return RedirectToAction(nameof(Index));
+        }
 
+        if (propiedad.AgentId != AgentId)
+        {
+            TempData["Error"] = "No tiene permisos para eliminar esta propiedad.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (propiedad.Estado != PropertyStatus.Disponible)
+        {
+            TempData["Error"] = "No se puede eliminar una propiedad que ya fue vendida.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        await _propertyService.DeletePropertyAsync(id, AgentId);
+        TempData["Mensaje"] = "La propiedad fue eliminada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 

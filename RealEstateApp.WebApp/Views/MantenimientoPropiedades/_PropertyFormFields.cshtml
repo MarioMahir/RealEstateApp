@@ -104,6 +104,3 @@
     <label class="form-label">@(Model.ImagenesActuales.Count > 0 ? "Agregar imágenes nuevas" : "Imágenes (mínimo 1, máximo 4)")</label>
     <input type="file" name="nuevasImagenes" class="form-control" accept=".jpg,.jpeg,.png" multiple />
 </div>
-
-<button type="submit" class="btn btn-primary">Guardar</button>
-<a asp-controller="MantenimientoPropiedades" asp-action="Index" class="btn btn-secondary">Cancelar</a>

@@ -125,7 +125,7 @@ public abstract class StaffMaintenanceControllerBase : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        var usuario = await AccountService.FindByIdAsync(id);
+        var usuario = await AdministradorService.GetStaffUserAsync(id, Rol);
         if (usuario is null)
         {
             TempData["Error"] = NotFoundMessage;
@@ -162,7 +162,7 @@ public abstract class StaffMaintenanceControllerBase : Controller
             return View("~/Views/Shared/Staff/Editar.cshtml", modelo);
         }
 
-        var usuarioActual = await AccountService.FindByIdAsync(id);
+        var usuarioActual = await AdministradorService.GetStaffUserAsync(id, Rol);
         if (usuarioActual is null)
         {
             TempData["Error"] = NotFoundMessage;
@@ -188,7 +188,7 @@ public abstract class StaffMaintenanceControllerBase : Controller
         }
 
         var resultado = await AdministradorService.UpdateStaffUserAsync(
-            id, CurrentUserId, AplicaAutoproteccion,
+            id, CurrentUserId, Rol, AplicaAutoproteccion,
             modelo.Nombre, modelo.Apellido, modelo.Cedula, modelo.CorreoElectronico, modelo.NombreUsuario, modelo.NuevaContrasena);
 
         if (resultado.Status == StaffActionStatus.PasswordUpdateFailed)
@@ -218,7 +218,7 @@ public abstract class StaffMaintenanceControllerBase : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleEstado(string id)
     {
-        var usuario = await AccountService.FindByIdAsync(id);
+        var usuario = await AdministradorService.GetStaffUserAsync(id, Rol);
         var seActivara = usuario is not null && !usuario.Activo;
 
         var resultado = await AdministradorService.ToggleStaffStatusAsync(id, CurrentUserId, Rol, AplicaAutoproteccion);

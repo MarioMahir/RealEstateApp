@@ -7,7 +7,7 @@ namespace RealEstateApp.Core.ViewModels.Agente;
 // ImagenesActuales solo se usan en Editar (Codigo es inmutable, nunca se
 // manda de vuelta al servicio; ImagenesActuales es solo para mostrar +
 // permitir marcar cuales eliminar).
-public class PropertyFormViewModel
+public class PropertyFormViewModel : IValidatableObject
 {
     public int Id { get; set; }
     public string? Codigo { get; set; }
@@ -51,4 +51,11 @@ public class PropertyFormViewModel
     public List<SelectOption> TiposVenta { get; set; } = new();
     public List<SelectOption> TodasLasMejoras { get; set; } = new();
     public List<ExistingImageViewModel> ImagenesActuales { get; set; } = new();
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (ImprovementIds.Count == 0)
+            yield return new ValidationResult(
+                "Debe seleccionarse al menos una mejora.", new[] { nameof(ImprovementIds) });
+    }
 }

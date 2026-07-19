@@ -67,7 +67,7 @@ public class HomeController : Controller
         var propiedad = await _propertyService.GetAvailableByIdAsync(id);
         if (propiedad is null)
         {
-            TempData["Error"] = "La propiedad solicitada no existe o ya no se encuentra disponible.";
+            TempData["Error"] = "La propiedad solicitada no existe o no se encuentra disponible.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -7,6 +7,9 @@
 
 <form asp-controller="MantenimientoPropiedades" asp-action="Editar" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
     @await Html.PartialAsync("_PropertyFormFields", Model)
+
+    <a asp-controller="MantenimientoPropiedades" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+    <button type="submit" class="btn btn-primary">Guardar propiedad</button>
 </form>
 
 @section Scripts {

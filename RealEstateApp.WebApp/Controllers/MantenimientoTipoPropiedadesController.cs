@@ -14,7 +14,7 @@ public class MantenimientoTipoPropiedadesController : CatalogMaintenanceControll
     }
 
     protected override string Titulo => "Mantenimiento de tipo de propiedades";
-    protected override string TituloNuevo => "Nuevo tipo de propiedad";
+    protected override string TituloNuevo => "Crear tipo de propiedad";
     protected override string TituloEditar => "Editar tipo de propiedad";
     protected override string EmptyListMessage => "No existen tipos de propiedades registrados.";
     protected override string NotFoundMessage => "El tipo de propiedad seleccionado no existe.";

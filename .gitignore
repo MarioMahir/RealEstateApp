@@ -55,3 +55,9 @@ appsettings.Development.json
 appsettings.*.local.json
 secrets.json
 *.pfx
+
+# Contenido subido por usuarios (fotos de perfil/propiedades, IFileStorageService) --
+# nunca debe terminar en el repo.
+RealEstateApp.WebApp/wwwroot/uploads/
+RealEstateApp.WebAPI/wwwroot/uploads/
+

@@ -11,8 +11,9 @@ namespace RealEstateApp.WebAPI.Controllers;
 // Base compartida por PropertyTypesController, SaleTypesController e
 // ImprovementsController: los tres tienen exactamente el mismo CRUD sobre
 // IGenericService<TEntity> (List/GetById para Administrador+Desarrollador,
-// Create/Update/Delete solo Administrador). Cada subclase solo aporta los
-// mensajes exactos del documento funcional para su entidad.
+// Create/Update/Delete solo Administrador). Cada subclase concreta solo
+// aporta el constructor y 3 propiedades con los mensajes exactos de su
+// entidad (NotFoundMessage, DuplicateNameMessage, DuplicateNameOnUpdateMessage).
 [ApiController]
 [Route("api/[controller]")]
 public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEntity : class, ICatalogItem
@@ -38,11 +39,18 @@ public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEnt
         return items.Count == 0 ? NoContent() : Ok(Mapper.Map<List<CatalogItemDto>>(items));
     }
 
-    [HttpGet("{id:int}")]
+    // Sin restriccion de ruta {id:int}: con esa restriccion, un id no
+    // numerico ni siquiera llega a este controlador (404 crudo del routing,
+    // antes de Authorize/accion) en vez del 400 que pide el documento
+    // funcional para un id con formato invalido.
+    [HttpGet("{id}")]
     [Authorize(Roles = $"{Roles.Administrador},{Roles.Desarrollador}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(string id)
     {
-        var item = await Service.GetByIdAsync(id);
+        if (!int.TryParse(id, out var parsedId))
+            return BadRequest(new { message = "El id debe ser un número entero." });
+
+        var item = await Service.GetByIdAsync(parsedId);
         return item is null ? NotFound(new { message = NotFoundMessage }) : Ok(Mapper.Map<CatalogItemDto>(item));
     }
 
@@ -65,11 +73,14 @@ public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEnt
         return StatusCode(StatusCodes.Status201Created, Mapper.Map<CatalogItemDto>(entity));
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id}")]
     [Authorize(Roles = Roles.Administrador)]
-    public async Task<IActionResult> Update(int id, CatalogItemUpsertDto dto)
+    public async Task<IActionResult> Update(string id, CatalogItemUpsertDto dto)
     {
-        var entity = await Service.GetByIdAsync(id);
+        if (!int.TryParse(id, out var parsedId))
+            return BadRequest(new { message = "El id debe ser un número entero." });
+
+        var entity = await Service.GetByIdAsync(parsedId);
         if (entity is null)
             return NotFound(new { message = NotFoundMessage });
 
@@ -78,7 +89,7 @@ public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEnt
             return BadRequest(new { message = "Los datos enviados no son válidos." });
 
         var existentes = await Service.GetAllAsync();
-        if (existentes.Any(x => x.Id != id && x.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
+        if (existentes.Any(x => x.Id != parsedId && x.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
             return BadRequest(new { message = DuplicateNameOnUpdateMessage });
 
         entity.Nombre = nombre;
@@ -88,11 +99,14 @@ public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEnt
         return Ok(Mapper.Map<CatalogItemDto>(entity));
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id}")]
     [Authorize(Roles = Roles.Administrador)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(string id)
     {
-        var entity = await Service.GetByIdAsync(id);
+        if (!int.TryParse(id, out var parsedId))
+            return BadRequest(new { message = "El id debe ser un número entero." });
+
+        var entity = await Service.GetByIdAsync(parsedId);
         if (entity is null)
             return NotFound(new { message = NotFoundMessage });
 

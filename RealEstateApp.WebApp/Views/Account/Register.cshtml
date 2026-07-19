@@ -55,11 +55,12 @@
                 <span asp-validation-for="TipoUsuario" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="foto" class="form-label">Foto de perfil (opcional)</label>
+                <label for="foto" class="form-label">Foto de usuario</label>
                 <input type="file" id="foto" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
             </div>
 
-            <button type="submit" class="btn btn-primary">Registrarme</button>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-link">Volver al inicio</a>
         </form>
     </div>
 </div>

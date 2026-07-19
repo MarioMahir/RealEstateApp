@@ -49,7 +49,7 @@ public class AgenteController : Controller
 
         var modelo = _mapper.Map<List<PropertyListItemViewModel>>(propiedades);
         if (modelo.Count == 0)
-            ViewData["Mensaje"] = "Todavía no tiene propiedades registradas.";
+            ViewData["Mensaje"] = "No tiene propiedades registradas en este momento.";
 
         return View(modelo);
     }
@@ -81,6 +81,13 @@ public class AgenteController : Controller
         if (!ModelState.IsValid)
             return View(nameof(Detalle), await ConstruirDetalleAsync(propiedad, modelo.ClienteId, modelo));
 
+        var mensajesPrevios = await _messageService.GetByPropertyAsync(propiedad.Id);
+        if (!mensajesPrevios.Any(m => m.ClienteId == modelo.ClienteId))
+        {
+            TempData["Error"] = "El cliente seleccionado no tiene una conversación asociada a esta propiedad.";
+            return RedirectToAction(nameof(Detalle), new { id = propiedad.Id });
+        }
+
         var resultado = await _messageService.SendMessageAsync(
             modelo.ClienteId, AgentId, propiedad.Id, MessageSender.Agente, modelo.Texto);
 
@@ -99,11 +106,10 @@ public class AgenteController : Controller
         var resultado = await _offerService.AcceptOfferAsync(offerId, AgentId);
         TempData[resultado == OfferActionStatus.Success ? "Mensaje" : "Error"] = resultado switch
         {
-            OfferActionStatus.Success =>
-                "La oferta fue aceptada. Las demás ofertas pendientes fueron rechazadas y la propiedad pasó a Vendida.",
+            OfferActionStatus.Success => "La oferta fue aceptada correctamente y la propiedad fue marcada como vendida.",
             OfferActionStatus.NotFound => "La oferta solicitada no existe.",
             OfferActionStatus.NotOwnedByAgent => "No tiene permisos sobre esta oferta.",
-            OfferActionStatus.NotPending => "Solo se pueden aceptar ofertas en estado Pendiente.",
+            OfferActionStatus.NotPending => "Esta oferta ya fue respondida.",
             _ => "No se pudo procesar la solicitud."
         };
 
@@ -117,10 +123,10 @@ public class AgenteController : Controller
         var resultado = await _offerService.RejectOfferAsync(offerId, AgentId);
         TempData[resultado == OfferActionStatus.Success ? "Mensaje" : "Error"] = resultado switch
         {
-            OfferActionStatus.Success => "La oferta fue rechazada.",
+            OfferActionStatus.Success => "La oferta fue rechazada correctamente.",
             OfferActionStatus.NotFound => "La oferta solicitada no existe.",
             OfferActionStatus.NotOwnedByAgent => "No tiene permisos sobre esta oferta.",
-            OfferActionStatus.NotPending => "Solo se pueden rechazar ofertas en estado Pendiente.",
+            OfferActionStatus.NotPending => "Esta oferta ya fue respondida.",
             _ => "No se pudo procesar la solicitud."
         };
 
@@ -205,12 +211,7 @@ public class AgenteController : Controller
 
         var modelo = new AgentPropertyDetailViewModel
         {
-            Id = propiedad.Id,
-            Codigo = propiedad.Codigo,
-            TipoPropiedad = propiedad.PropertyType.Nombre,
-            TipoVenta = propiedad.SaleType.Nombre,
-            Precio = propiedad.Precio,
-            Estado = propiedad.Estado.ToString(),
+            Propiedad = _mapper.Map<PropertyDetailViewModel>(propiedad),
             Conversaciones = conversaciones,
             GruposDeOfertas = gruposDeOfertas
         };

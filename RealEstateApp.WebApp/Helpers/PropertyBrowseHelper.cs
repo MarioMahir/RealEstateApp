@@ -55,7 +55,9 @@ internal static class PropertyBrowseHelper
         {
             modelo.Mensaje = tieneFiltros
                 ? "No se encontraron propiedades disponibles con los filtros seleccionados."
-                : "Todavía no hay propiedades disponibles publicadas.";
+                : agentIdScope is not null
+                    ? "Este agente no tiene propiedades disponibles en este momento."
+                    : "Todavía no hay propiedades disponibles publicadas.";
         }
     }
 

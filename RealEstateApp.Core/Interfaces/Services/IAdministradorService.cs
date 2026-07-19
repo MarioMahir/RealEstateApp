@@ -12,11 +12,18 @@ public interface IAdministradorService
     // todos los usuarios de ese rol (activos e inactivos).
     Task<List<ApplicationUser>> GetUsersInRoleAsync(string role);
 
+    // null = no existe o no tiene el rol indicado -- evita que, por ejemplo,
+    // Mantenimiento de administradores pueda editar/activar un usuario que en
+    // realidad es Cliente o Agente (mismo patron que AgentService.
+    // GetAgentUserOrNullAsync).
+    Task<ApplicationUser?> GetStaffUserAsync(string userId, string role);
+
     // enforceSelfProtection = true solo para Administrador (Desarrollador no
     // tiene estas reglas): no editar el propio usuario.
     Task<StaffUpdateResult> UpdateStaffUserAsync(
         string targetUserId,
         string currentUserId,
+        string role,
         bool enforceSelfProtection,
         string nombre,
         string apellido,

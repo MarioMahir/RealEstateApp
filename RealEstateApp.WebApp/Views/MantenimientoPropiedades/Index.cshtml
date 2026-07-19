@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Mantenimiento de propiedades</h1>
-    <a asp-controller="MantenimientoPropiedades" asp-action="Crear" class="btn btn-primary">Nueva propiedad</a>
+    <a asp-controller="MantenimientoPropiedades" asp-action="Crear" class="btn btn-primary">Crear propiedad</a>
 </div>
 
 @if (!string.IsNullOrEmpty(mensaje))
@@ -15,34 +15,36 @@
 }
 else
 {
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Tipo</th>
-                <th>Venta</th>
-                <th>Precio</th>
-                <th>Hab.</th>
-                <th>Baños</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var propiedad in Model)
-            {
-                <tr>
-                    <td>@propiedad.Codigo</td>
-                    <td>@propiedad.TipoPropiedad</td>
-                    <td>@propiedad.TipoVenta</td>
-                    <td>RD$@propiedad.Precio.ToString("N0")</td>
-                    <td>@propiedad.CantidadHabitaciones</td>
-                    <td>@propiedad.CantidadBanos</td>
-                    <td class="text-end">
-                        <a asp-controller="MantenimientoPropiedades" asp-action="Editar" asp-route-id="@propiedad.Id" class="btn btn-sm btn-outline-primary">Editar</a>
-                        <a asp-controller="MantenimientoPropiedades" asp-action="Eliminar" asp-route-id="@propiedad.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var propiedad in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                    {
+                        <img src="@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height:200px;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height:200px;">
+                            <span class="text-muted">Sin imagen</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@propiedad.TipoPropiedad &middot; @propiedad.TipoVenta</h5>
+                        <p class="card-text">
+                            Código: @propiedad.Codigo<br />
+                            Precio: RD$@propiedad.Precio.ToString("N0")<br />
+                            @propiedad.CantidadHabitaciones hab. / @propiedad.CantidadBanos baños<br />
+                            Terreno: @propiedad.TamanoTerreno.ToString("N0") m&sup2;
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex gap-2">
+                        <a asp-controller="MantenimientoPropiedades" asp-action="Editar" asp-route-id="@propiedad.Id" class="btn btn-outline-primary w-50">Editar</a>
+                        <a asp-controller="MantenimientoPropiedades" asp-action="Eliminar" asp-route-id="@propiedad.Id" class="btn btn-outline-danger w-50">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }

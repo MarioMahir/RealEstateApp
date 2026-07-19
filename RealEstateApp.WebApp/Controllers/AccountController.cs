@@ -55,6 +55,9 @@ public class AccountController : Controller
         if (await _accountService.UsernameExistsAsync(modelo.NombreUsuario))
             ModelState.AddModelError(nameof(modelo.NombreUsuario), "Ya existe un usuario registrado con este nombre de usuario.");
 
+        if (foto is not { Length: > 0 })
+            ModelState.AddModelError(string.Empty, "La foto de usuario es requerida.");
+
         if (!ModelState.IsValid)
             return View(modelo);
 
@@ -86,8 +89,7 @@ public class AccountController : Controller
         var resultado = await _accountService.RegisterAsync(usuario, modelo.Contrasena, modelo.TipoUsuario);
         if (!resultado.Succeeded)
         {
-            foreach (var error in resultado.Errors)
-                ModelState.AddModelError(string.Empty, error);
+            ModelState.AddModelError(string.Empty, "No fue posible completar el registro. Intente nuevamente más tarde.");
             return View(modelo);
         }
 
@@ -95,12 +97,12 @@ public class AccountController : Controller
         {
             var correoEnviado = await EnviarCorreoActivacionAsync(usuario);
             TempData["Mensaje"] = correoEnviado
-                ? "Su cuenta fue creada. Revise su correo electrónico para activarla antes de iniciar sesión."
+                ? "Su cuenta ha sido creada correctamente. Revise su correo electrónico para activar su usuario."
                 : "Su cuenta fue creada, pero no se pudo enviar el correo de activación. Contacte al administrador para activarla.";
         }
         else
         {
-            TempData["Mensaje"] = "Su cuenta fue creada. Un administrador debe activarla antes de que pueda iniciar sesión.";
+            TempData["Mensaje"] = "Su cuenta de agente ha sido creada correctamente. Un administrador debe activar su usuario antes de que pueda iniciar sesión.";
         }
 
         return RedirectToAction(nameof(Login));
@@ -143,7 +145,7 @@ public class AccountController : Controller
         // como en la WebAPI).
         if (!roles.Contains(Roles.Administrador) && !roles.Contains(Roles.Cliente) && !roles.Contains(Roles.Agente))
         {
-            ModelState.AddModelError(string.Empty, "Los desarrolladores no tienen acceso a esta aplicación.");
+            ModelState.AddModelError(string.Empty, "El usuario no tiene un rol válido asignado. Póngase en contacto con un administrador.");
             return View(modelo);
         }
 
@@ -199,8 +201,11 @@ public class AccountController : Controller
         {
             await _emailService.SendEmailAsync(
                 usuario.Email!,
-                "Activa tu cuenta en RealEstateApp",
-                $"<p>Gracias por registrarte en RealEstateApp.</p><p><a href=\"{enlace}\">Haz clic aquí para activar tu cuenta</a></p>");
+                "Activación de cuenta en RealEstateApp",
+                $"<p>Hola {usuario.Nombre},</p>" +
+                "<p>Su cuenta ha sido registrada correctamente en RealEstateApp.</p>" +
+                $"<p>Para activar su usuario y poder iniciar sesión, utilice el siguiente enlace de activación: <a href=\"{enlace}\">{enlace}</a></p>" +
+                "<p>Si usted no realizó este registro, puede ignorar este mensaje.</p>");
             return true;
         }
         catch (Exception ex)

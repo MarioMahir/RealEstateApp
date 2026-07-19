@@ -1,11 +1,17 @@
 @model PropertyBrowseViewModel
 
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-md-4">
+        <label asp-for="Codigo" class="form-label"></label>
+        <input asp-for="Codigo" class="form-control" placeholder="Ej: 123456" />
+    </div>
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
 <form method="get" class="border rounded p-3 mb-4 bg-light">
     <div class="row g-3 align-items-end">
-        <div class="col-md-2">
-            <label asp-for="Codigo" class="form-label"></label>
-            <input asp-for="Codigo" class="form-control" placeholder="Ej: 123456" />
-        </div>
         <div class="col-md-3">
             <label asp-for="PropertyTypeId" class="form-label"></label>
             <select asp-for="PropertyTypeId" class="form-select">
@@ -35,7 +41,10 @@
             <input asp-for="CantidadBanos" class="form-control" />
         </div>
         <div class="col-md-1 d-grid">
-            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+        <div class="col-md-2 d-grid">
+            <a href="@Context.Request.Path" class="btn btn-outline-secondary">Limpiar filtros</a>
         </div>
     </div>
     <div asp-validation-summary="ModelOnly" class="text-danger mt-2"></div>

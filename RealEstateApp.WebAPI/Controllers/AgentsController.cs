@@ -48,7 +48,10 @@ public class AgentsController : ControllerBase
     [Authorize(Roles = Roles.Administrador)]
     public async Task<IActionResult> ChangeStatus(string id, AgentStatusUpdateDto dto)
     {
-        var updated = await _agentService.ChangeStatusAsync(id, dto.Estado);
+        // dto.Estado es bool? justo para que [Required] detecte un cuerpo sin
+        // el campo (en un bool no-nullable, [Required] es un no-op); si llego
+        // aqui, ApiController ya garantizo que no es null.
+        var updated = await _agentService.ChangeStatusAsync(id, dto.Estado!.Value);
         return updated
             ? NoContent()
             : NotFound(new { message = "El agente solicitado no existe." });

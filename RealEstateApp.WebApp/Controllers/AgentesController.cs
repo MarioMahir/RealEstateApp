@@ -43,7 +43,7 @@ public class AgentesController : Controller
         var agente = await _agentService.GetActiveAgentByIdAsync(id);
         if (agente is null)
         {
-            TempData["Error"] = "El agente solicitado no existe o no se encuentra activo.";
+            TempData["Error"] = "El agente solicitado no existe o no se encuentra disponible.";
             return RedirectToAction(nameof(Index));
         }
 

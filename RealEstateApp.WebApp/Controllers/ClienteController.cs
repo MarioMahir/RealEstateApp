@@ -49,7 +49,7 @@ public class ClienteController : Controller
         var modelo = new PropertyBrowseViewModel
         {
             Propiedades = items,
-            Mensaje = items.Count == 0 ? "Todavía no tienes propiedades favoritas disponibles." : null
+            Mensaje = items.Count == 0 ? "No tiene propiedades favoritas disponibles en este momento." : null
         };
 
         return View(modelo);
@@ -63,8 +63,8 @@ public class ClienteController : Controller
 
         TempData[resultado is null ? "Error" : "Mensaje"] = resultado switch
         {
-            true => "La propiedad fue agregada a tus favoritos.",
-            false => "La propiedad fue eliminada de tus favoritos.",
+            true => "La propiedad fue agregada a sus favoritas correctamente.",
+            false => "La propiedad fue eliminada de sus favoritas correctamente.",
             null => "La propiedad solicitada no existe."
         };
 
@@ -80,7 +80,7 @@ public class ClienteController : Controller
         var propiedad = await _propertyService.GetByIdWithDetailsAsync(id);
         if (propiedad is null)
         {
-            TempData["Error"] = "La propiedad solicitada no existe.";
+            TempData["Error"] = "La propiedad solicitada no existe o no se encuentra disponible.";
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -94,7 +94,7 @@ public class ClienteController : Controller
             || modelo.Mensajes.Count > 0;
         if (!accesible)
         {
-            TempData["Error"] = "La propiedad solicitada no existe o ya no se encuentra disponible.";
+            TempData["Error"] = "La propiedad solicitada no existe o no se encuentra disponible.";
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -139,8 +139,8 @@ public class ClienteController : Controller
         TempData[resultado.Status == OfferCreationStatus.Success ? "Mensaje" : "Error"] = resultado.Status switch
         {
             OfferCreationStatus.Success => "Su oferta fue enviada correctamente.",
-            OfferCreationStatus.DuplicatePending => "Ya tiene una oferta pendiente sobre esta propiedad.",
-            OfferCreationStatus.PropertyNotAvailable => "Esta propiedad ya no admite ofertas nuevas.",
+            OfferCreationStatus.DuplicatePending => "Ya tiene una oferta pendiente para esta propiedad.",
+            OfferCreationStatus.PropertyNotAvailable => "Esta propiedad ya no se encuentra disponible para recibir ofertas.",
             _ => "No se pudo procesar la oferta."
         };
 

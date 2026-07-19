@@ -1,13 +1,11 @@
 @model AgentPropertyDetailViewModel
 @{
-    ViewData["Title"] = $"Propiedad {Model.Codigo}";
+    ViewData["Title"] = $"Propiedad {Model.Propiedad.Codigo}";
 }
 
-<h1 class="mb-1">@Model.TipoPropiedad &middot; @Model.TipoVenta</h1>
-<p class="text-muted">
-    Código: @Model.Codigo &middot; RD$@Model.Precio.ToString("N0") &middot;
-    <span class="badge @(Model.Estado == "Disponible" ? "bg-success" : "bg-secondary")">@Model.Estado</span>
-</p>
+@await Html.PartialAsync("_PropertyDetailInfo", Model.Propiedad)
+
+<hr class="my-4" />
 
 <div class="row">
     <div class="col-md-6">
@@ -21,7 +19,7 @@
             <div class="list-group mb-3">
                 @foreach (var conversacion in Model.Conversaciones)
                 {
-                    <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Id" asp-route-clienteId="@conversacion.ClienteId"
+                    <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@conversacion.ClienteId"
                        class="list-group-item list-group-item-action @(conversacion.ClienteId == Model.ClienteSeleccionadoId ? "active" : "")">
                         <div class="d-flex justify-content-between">
                             <strong>@conversacion.NombreCliente</strong>
@@ -48,7 +46,7 @@
                 }
             </div>
 
-            @if (Model.Estado == "Disponible")
+            @if (Model.Propiedad.Estado == "Disponible")
             {
                 @await Html.PartialAsync("_AgentReplyForm", Model.Respuesta)
             }
@@ -70,7 +68,13 @@
             @foreach (var grupo in Model.GruposDeOfertas)
             {
                 <div class="card mb-3">
-                    <div class="card-header">@grupo.NombreCliente</div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>@grupo.NombreCliente</span>
+                        <small class="text-muted">
+                            @grupo.CantidadOfertas oferta(s) &middot; última: RD$@grupo.UltimaOferta.ToString("N0")
+                            <span class="badge @(grupo.EstadoUltimaOferta == "Aceptada" ? "bg-success" : grupo.EstadoUltimaOferta == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@grupo.EstadoUltimaOferta</span>
+                        </small>
+                    </div>
                     <ul class="list-group list-group-flush">
                         @foreach (var oferta in grupo.Ofertas)
                         {
@@ -87,12 +91,12 @@
                                         <div class="mt-1">
                                             <form asp-controller="Agente" asp-action="AceptarOferta" method="post" class="d-inline">
                                                 <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                <input type="hidden" name="propertyId" value="@Model.Id" />
+                                                <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
                                                 <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
                                             </form>
                                             <form asp-controller="Agente" asp-action="RechazarOferta" method="post" class="d-inline">
                                                 <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                <input type="hidden" name="propertyId" value="@Model.Id" />
+                                                <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">Rechazar</button>
                                             </form>
                                         </div>

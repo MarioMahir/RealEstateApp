@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealEstateApp.Infrastructure;
@@ -41,6 +42,28 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
+
+// Unifica la forma de las respuestas de error: sin esto, un DataAnnotation
+// fallido (ej. [Required] en un DTO) responde con el ValidationProblemDetails
+// de ASP.NET Core ({"type","title","status","errors":{...}}), mientras que
+// las validaciones de negocio ya escritas a mano en los controladores
+// responden con {"message": "..."} -- dos formas distintas de error 400
+// conviviendo en la misma API. Esto reescribe el 400 automatico para que use
+// la MISMA forma que el resto de la API.
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var mensaje = context.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .FirstOrDefault(m => !string.IsNullOrWhiteSpace(m))
+            ?? "Los datos enviados no son válidos.";
+
+        return new BadRequestObjectResult(new { message = mensaje });
+    };
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

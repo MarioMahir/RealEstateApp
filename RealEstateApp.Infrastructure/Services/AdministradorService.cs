@@ -23,9 +23,17 @@ public class AdministradorService : IAdministradorService
     public async Task<List<ApplicationUser>> GetUsersInRoleAsync(string role) =>
         (await _userManager.GetUsersInRoleAsync(role)).ToList();
 
+    public async Task<ApplicationUser?> GetStaffUserAsync(string userId, string role)
+    {
+        var usuario = await _userManager.FindByIdAsync(userId);
+        if (usuario is null) return null;
+        return await _userManager.IsInRoleAsync(usuario, role) ? usuario : null;
+    }
+
     public async Task<StaffUpdateResult> UpdateStaffUserAsync(
         string targetUserId,
         string currentUserId,
+        string role,
         bool enforceSelfProtection,
         string nombre,
         string apellido,
@@ -37,7 +45,7 @@ public class AdministradorService : IAdministradorService
         if (enforceSelfProtection && targetUserId == currentUserId)
             return new StaffUpdateResult { Status = StaffActionStatus.CannotModifySelf };
 
-        var usuario = await _userManager.FindByIdAsync(targetUserId);
+        var usuario = await GetStaffUserAsync(targetUserId, role);
         if (usuario is null)
             return new StaffUpdateResult { Status = StaffActionStatus.NotFound };
 
@@ -77,7 +85,7 @@ public class AdministradorService : IAdministradorService
         if (enforceSelfProtection && targetUserId == currentUserId)
             return StaffActionStatus.CannotModifySelf;
 
-        var usuario = await _userManager.FindByIdAsync(targetUserId);
+        var usuario = await GetStaffUserAsync(targetUserId, role);
         if (usuario is null)
             return StaffActionStatus.NotFound;
 
