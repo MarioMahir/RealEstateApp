@@ -40,6 +40,9 @@
                             Terreno: @propiedad.TamanoTerreno.ToString("N0") m&sup2;
                         </p>
                     </div>
+                    <div class="card-footer bg-transparent">
+                        <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@propiedad.Id" class="btn btn-outline-primary w-100">Ver conversaciones y ofertas</a>
+                    </div>
                 </div>
             </div>
         }

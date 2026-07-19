@@ -51,4 +51,11 @@ public class MessageService : IMessageService
 
         return new MessageSendResult { Status = MessageSendStatus.Success, Message = message };
     }
+
+    public Task<List<Message>> GetByPropertyAsync(int propertyId) =>
+        _messageRepository.Query()
+            .Where(m => m.PropertyId == propertyId)
+            .Include(m => m.Cliente)
+            .OrderBy(m => m.Fecha)
+            .ToListAsync();
 }

@@ -20,10 +20,12 @@ public class OfferService : GenericService<Offer>, IOfferService
         _propertyRepository = propertyRepository;
     }
 
-    public async Task AcceptOfferAsync(int offerId)
+    public async Task<OfferActionStatus> AcceptOfferAsync(int offerId, string agentId)
     {
-        var offer = await Repository.GetByIdAsync(offerId)
-            ?? throw new KeyNotFoundException("La oferta solicitada no existe.");
+        var offer = await Repository.Query().Include(o => o.Property).FirstOrDefaultAsync(o => o.Id == offerId);
+        if (offer is null) return OfferActionStatus.NotFound;
+        if (offer.Property.AgentId != agentId) return OfferActionStatus.NotOwnedByAgent;
+        if (offer.Estado != OfferStatus.Pendiente) return OfferActionStatus.NotPending;
 
         var pendientes = Repository.Query()
             .Where(o => o.PropertyId == offer.PropertyId && o.Estado == OfferStatus.Pendiente)
@@ -35,25 +37,27 @@ public class OfferService : GenericService<Offer>, IOfferService
             Repository.Update(pendiente);
         }
 
-        var property = await _propertyRepository.GetByIdAsync(offer.PropertyId)
-            ?? throw new KeyNotFoundException("La propiedad asociada no existe.");
-        property.Estado = PropertyStatus.Vendida;
-        _propertyRepository.Update(property);
+        offer.Property.Estado = PropertyStatus.Vendida;
+        _propertyRepository.Update(offer.Property);
 
         // Un solo SaveChanges: EF Core lo envuelve en una transaccion implicita,
         // por lo que la oferta aceptada, las rechazadas y el cambio de estado de
         // la propiedad se confirman (o fallan) todos juntos.
         await UnitOfWork.SaveChangesAsync();
+        return OfferActionStatus.Success;
     }
 
-    public async Task RejectOfferAsync(int offerId)
+    public async Task<OfferActionStatus> RejectOfferAsync(int offerId, string agentId)
     {
-        var offer = await Repository.GetByIdAsync(offerId)
-            ?? throw new KeyNotFoundException("La oferta solicitada no existe.");
+        var offer = await Repository.Query().Include(o => o.Property).FirstOrDefaultAsync(o => o.Id == offerId);
+        if (offer is null) return OfferActionStatus.NotFound;
+        if (offer.Property.AgentId != agentId) return OfferActionStatus.NotOwnedByAgent;
+        if (offer.Estado != OfferStatus.Pendiente) return OfferActionStatus.NotPending;
 
         offer.Estado = OfferStatus.Rechazada;
         Repository.Update(offer);
         await UnitOfWork.SaveChangesAsync();
+        return OfferActionStatus.Success;
     }
 
     public async Task<OfferCreationResult> CreateOfferAsync(string clienteId, int propertyId, decimal monto)
@@ -85,6 +89,13 @@ public class OfferService : GenericService<Offer>, IOfferService
     public Task<List<Offer>> GetByClienteAndPropertyAsync(string clienteId, int propertyId) =>
         Repository.Query()
             .Where(o => o.ClienteId == clienteId && o.PropertyId == propertyId)
+            .OrderByDescending(o => o.Fecha)
+            .ToListAsync();
+
+    public Task<List<Offer>> GetByPropertyAsync(int propertyId) =>
+        Repository.Query()
+            .Where(o => o.PropertyId == propertyId)
+            .Include(o => o.Cliente)
             .OrderByDescending(o => o.Fecha)
             .ToListAsync();
 }

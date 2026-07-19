@@ -14,4 +14,8 @@ public interface IMessageService
 
     Task<MessageSendResult> SendMessageAsync(
         string clienteId, string agenteId, int propertyId, MessageSender remitente, string texto);
+
+    // Todos los mensajes de una propiedad (cualquier cliente) -- Detalle de
+    // propiedad (agente), agrupados por cliente en el controlador/vista.
+    Task<List<Message>> GetByPropertyAsync(int propertyId);
 }

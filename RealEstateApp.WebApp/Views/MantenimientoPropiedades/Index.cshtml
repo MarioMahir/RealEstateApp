@@ -1,0 +1,48 @@
+@model List<PropertyListItemViewModel>
+@{
+    ViewData["Title"] = "Mantenimiento de propiedades";
+    var mensaje = ViewData["Mensaje"] as string;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Mantenimiento de propiedades</h1>
+    <a asp-controller="MantenimientoPropiedades" asp-action="Crear" class="btn btn-primary">Nueva propiedad</a>
+</div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">@mensaje</div>
+}
+else
+{
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Venta</th>
+                <th>Precio</th>
+                <th>Hab.</th>
+                <th>Baños</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var propiedad in Model)
+            {
+                <tr>
+                    <td>@propiedad.Codigo</td>
+                    <td>@propiedad.TipoPropiedad</td>
+                    <td>@propiedad.TipoVenta</td>
+                    <td>RD$@propiedad.Precio.ToString("N0")</td>
+                    <td>@propiedad.CantidadHabitaciones</td>
+                    <td>@propiedad.CantidadBanos</td>
+                    <td class="text-end">
+                        <a asp-controller="MantenimientoPropiedades" asp-action="Editar" asp-route-id="@propiedad.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <a asp-controller="MantenimientoPropiedades" asp-action="Eliminar" asp-route-id="@propiedad.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

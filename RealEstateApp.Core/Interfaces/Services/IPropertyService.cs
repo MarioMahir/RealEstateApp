@@ -29,4 +29,20 @@ public interface IPropertyService : IGenericService<Property>
 
     // "Mis propiedades" (Cliente, Etapa 3): favoritos que siguen Disponible.
     Task<List<Property>> GetFavoritesByClienteAsync(string clienteId);
+
+    // Mantenimiento de propiedades (Agente, Etapa 4). null = no existe o no
+    // pertenece a este agente; el llamador decide si el Estado actual permite
+    // la accion (editar/eliminar exigen Disponible, Detalle permite cualquiera).
+    Task<Property?> GetByIdForAgentAsync(int id, string agentId);
+
+    // 6 digitos, unico, generado por el sistema -- nunca por el usuario.
+    Task<string> GenerateUniqueCodeAsync();
+
+    Task<Property> CreatePropertyAsync(Property property, List<int> improvementIds, List<string> imageUrls);
+
+    // false = la propiedad no existe, no pertenece a este agente, o ya no esta Disponible.
+    Task<bool> UpdatePropertyAsync(
+        Property cambios, List<int> improvementIds, List<int> imageIdsToRemove, List<string> newImageUrls);
+
+    Task<bool> DeletePropertyAsync(int propertyId, string agentId);
 }
