@@ -3,6 +3,11 @@
     ViewData["Title"] = "Mis propiedades";
 }
 
-<h1 class="mb-4">Mis propiedades</h1>
+<div class="page-header">
+    <div>
+        <h1>Mis propiedades</h1>
+        <p class="page-header-subtitle">Tus propiedades favoritas que siguen disponibles.</p>
+    </div>
+</div>
 
 @await Html.PartialAsync("_PropertyResultsPartial", Model)

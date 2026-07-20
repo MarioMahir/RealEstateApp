@@ -3,71 +3,60 @@
     ViewData["Title"] = "Home del administrador";
 }
 
-<h1 class="mb-4">Indicadores del sistema</h1>
+<div class="page-header">
+    <div>
+        <h1>Panel del administrador</h1>
+        <p class="page-header-subtitle">Indicadores generales del sistema.</p>
+    </div>
+</div>
 
-<div class="row row-cols-1 row-cols-md-4 g-4">
+<div class="row row-cols-2 row-cols-lg-4 g-3">
     <div class="col">
-        <div class="card text-center border-primary">
-            <div class="card-body">
-                <h2 class="card-title">@Model.PropiedadesDisponibles</h2>
-                <p class="card-text">Propiedades disponibles</p>
-            </div>
+        <div class="card stat-card">
+            <div class="stat-value">@Model.PropiedadesDisponibles</div>
+            <div class="stat-label">Propiedades disponibles</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-secondary">
-            <div class="card-body">
-                <h2 class="card-title">@Model.PropiedadesVendidas</h2>
-                <p class="card-text">Propiedades vendidas</p>
-            </div>
+        <div class="card stat-card stat-neutral">
+            <div class="stat-value">@Model.PropiedadesVendidas</div>
+            <div class="stat-label">Propiedades vendidas</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-success">
-            <div class="card-body">
-                <h2 class="card-title">@Model.AgentesActivos</h2>
-                <p class="card-text">Agentes activos</p>
-            </div>
+        <div class="card stat-card stat-success">
+            <div class="stat-value">@Model.AgentesActivos</div>
+            <div class="stat-label">Agentes activos</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-danger">
-            <div class="card-body">
-                <h2 class="card-title">@Model.AgentesInactivos</h2>
-                <p class="card-text">Agentes inactivos</p>
-            </div>
+        <div class="card stat-card stat-danger">
+            <div class="stat-value">@Model.AgentesInactivos</div>
+            <div class="stat-label">Agentes inactivos</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-success">
-            <div class="card-body">
-                <h2 class="card-title">@Model.ClientesActivos</h2>
-                <p class="card-text">Clientes activos</p>
-            </div>
+        <div class="card stat-card stat-success">
+            <div class="stat-value">@Model.ClientesActivos</div>
+            <div class="stat-label">Clientes activos</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-danger">
-            <div class="card-body">
-                <h2 class="card-title">@Model.ClientesInactivos</h2>
-                <p class="card-text">Clientes inactivos</p>
-            </div>
+        <div class="card stat-card stat-danger">
+            <div class="stat-value">@Model.ClientesInactivos</div>
+            <div class="stat-label">Clientes inactivos</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-success">
-            <div class="card-body">
-                <h2 class="card-title">@Model.DesarrolladoresActivos</h2>
-                <p class="card-text">Desarrolladores activos</p>
-            </div>
+        <div class="card stat-card stat-success">
+            <div class="stat-value">@Model.DesarrolladoresActivos</div>
+            <div class="stat-label">Desarrolladores activos</div>
         </div>
     </div>
     <div class="col">
-        <div class="card text-center border-danger">
-            <div class="card-body">
-                <h2 class="card-title">@Model.DesarrolladoresInactivos</h2>
-                <p class="card-text">Desarrolladores inactivos</p>
-            </div>
+        <div class="card stat-card stat-danger">
+            <div class="stat-value">@Model.DesarrolladoresInactivos</div>
+            <div class="stat-label">Desarrolladores inactivos</div>
         </div>
     </div>
 </div>

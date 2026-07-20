@@ -3,6 +3,6 @@
     ViewData["Title"] = $"Propiedad {Model.Codigo}";
 }
 
-@await Html.PartialAsync("_PropertyDetailInfo", Model)
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">&larr; Volver al listado</a>
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
+@await Html.PartialAsync("_PropertyDetailInfo", Model)

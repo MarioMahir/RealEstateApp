@@ -3,7 +3,14 @@
     ViewData["Title"] = "Inicio";
 }
 
-<h1 class="mb-4">Propiedades disponibles</h1>
+<div class="hero">
+    <h1>Encuentra tu próxima propiedad</h1>
+    <p>Explora casas, apartamentos y más, publicados por agentes verificados en toda República Dominicana.</p>
+</div>
+
+<div class="page-header">
+    <h2 class="mb-0">Propiedades disponibles</h2>
+</div>
 
 @await Html.PartialAsync("_PropertyFilterForm", Model)
 @await Html.PartialAsync("_PropertyResultsPartial", Model)

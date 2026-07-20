@@ -3,105 +3,115 @@
     ViewData["Title"] = $"Propiedad {Model.Propiedad.Codigo}";
 }
 
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">&larr; Volver</a>
+
 @await Html.PartialAsync("_PropertyDetailInfo", Model.Propiedad)
 
-<hr class="my-4" />
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="section-title">Conversación con el agente</h3>
+                <div class="border rounded-3 p-3 mb-3" style="max-height:350px;overflow-y:auto;background-color:var(--bg-alt);">
+                    @if (Model.Mensajes.Count == 0)
+                    {
+                        <p class="text-muted mb-0">Todavía no hay mensajes en esta conversación.</p>
+                    }
+                    else
+                    {
+                        @foreach (var mensaje in Model.Mensajes)
+                        {
+                            <div class="mb-2 @(mensaje.Remitente == "Cliente" ? "text-end" : "text-start")">
+                                <div class="d-inline-block chat-bubble @(mensaje.Remitente == "Cliente" ? "bg-primary text-white" : "bg-white")">
+                                    <div>@mensaje.Texto</div>
+                                    <small class="@(mensaje.Remitente == "Cliente" ? "text-white-50" : "text-muted")">@mensaje.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <h3>Conversación con el agente</h3>
-        <div class="border rounded p-3 mb-3" style="max-height:350px;overflow-y:auto;">
-            @if (Model.Mensajes.Count == 0)
-            {
-                <p class="text-muted mb-0">Todavía no hay mensajes en esta conversación.</p>
-            }
-            else
-            {
-                @foreach (var mensaje in Model.Mensajes)
+                @if (Model.Propiedad.Estado == "Disponible")
                 {
-                    <div class="mb-2 @(mensaje.Remitente == "Cliente" ? "text-end" : "text-start")">
-                        <div class="d-inline-block p-2 rounded @(mensaje.Remitente == "Cliente" ? "bg-primary text-white" : "bg-light")">
-                            <div>@mensaje.Texto</div>
-                            <small class="@(mensaje.Remitente == "Cliente" ? "text-white-50" : "text-muted")">@mensaje.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                    @await Html.PartialAsync("_SendMessageForm", Model.NuevoMensaje)
+                }
+                else
+                {
+                    <div class="alert alert-secondary mb-0">Esta propiedad ya no admite mensajes nuevos.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="section-title">Mis ofertas</h3>
+                @if (Model.MisOfertas.Count == 0)
+                {
+                    <p class="text-muted">Todavía no ha realizado ninguna oferta sobre esta propiedad.</p>
+                }
+                else
+                {
+                    <div class="table-wrap mb-3">
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr><th>Monto</th><th>Fecha</th><th>Estado</th></tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var oferta in Model.MisOfertas)
+                                    {
+                                        <tr>
+                                            <td class="fw-semibold">RD$@oferta.Monto.ToString("N0")</td>
+                                            <td class="text-muted">@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 }
-            }
-        </div>
 
-        @if (Model.Propiedad.Estado == "Disponible")
-        {
-            @await Html.PartialAsync("_SendMessageForm", Model.NuevoMensaje)
-        }
-        else
-        {
-            <div class="alert alert-secondary">Esta propiedad ya no admite mensajes nuevos.</div>
-        }
-    </div>
+                @if (Model.PermiteNuevaOferta)
+                {
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaOferta">
+                        Enviar nueva oferta
+                    </button>
 
-    <div class="col-md-6">
-        <h3>Mis ofertas</h3>
-        @if (Model.MisOfertas.Count == 0)
-        {
-            <p class="text-muted">Todavía no ha realizado ninguna oferta sobre esta propiedad.</p>
-        }
-        else
-        {
-            <table class="table table-sm">
-                <thead>
-                    <tr><th>Monto</th><th>Fecha</th><th>Estado</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var oferta in Model.MisOfertas)
-                    {
-                        <tr>
-                            <td>RD$@oferta.Monto.ToString("N0")</td>
-                            <td>@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>
-                                <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
-        @if (Model.PermiteNuevaOferta)
-        {
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaOferta">
-                Enviar nueva oferta
-            </button>
-
-            <div class="modal fade" id="modalNuevaOferta" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Enviar nueva oferta</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            @await Html.PartialAsync("_CreateOfferForm", Model.NuevaOferta)
+                    <div class="modal fade" id="modalNuevaOferta" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Enviar nueva oferta</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @await Html.PartialAsync("_CreateOfferForm", Model.NuevaOferta)
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary" disabled>Enviar nueva oferta</button>
+                    @if (Model.Propiedad.Estado == "Disponible")
+                    {
+                        <div class="alert alert-secondary mt-2 mb-0">Ya tiene una oferta pendiente para esta propiedad.</div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary mt-2 mb-0">Esta propiedad ya tiene una oferta aceptada y no permite nuevas ofertas.</div>
+                    }
+                }
             </div>
-        }
-        else
-        {
-            <button type="button" class="btn btn-primary" disabled>Enviar nueva oferta</button>
-            @if (Model.Propiedad.Estado == "Disponible")
-            {
-                <div class="alert alert-secondary mt-2">Ya tiene una oferta pendiente para esta propiedad.</div>
-            }
-            else
-            {
-                <div class="alert alert-secondary mt-2">Esta propiedad ya tiene una oferta aceptada y no permite nuevas ofertas.</div>
-            }
-        }
+        </div>
     </div>
 </div>
-
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-4">Volver</a>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

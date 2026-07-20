@@ -3,14 +3,20 @@
     ViewData["Title"] = "Crear propiedad";
 }
 
-<h1 class="mb-4">Crear propiedad</h1>
+<div class="page-header">
+    <h1>Crear propiedad</h1>
+</div>
 
-<form asp-controller="MantenimientoPropiedades" asp-action="Crear" method="post" enctype="multipart/form-data">
-    @await Html.PartialAsync("_PropertyFormFields", Model)
+<div class="card p-3 p-md-4">
+    <form asp-controller="MantenimientoPropiedades" asp-action="Crear" method="post" enctype="multipart/form-data">
+        @await Html.PartialAsync("_PropertyFormFields", Model)
 
-    <a asp-controller="MantenimientoPropiedades" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
-    <button type="submit" class="btn btn-primary">Crear propiedad</button>
-</form>
+        <div class="d-flex gap-2 mt-4">
+            <a asp-controller="MantenimientoPropiedades" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+            <button type="submit" class="btn btn-primary">Crear propiedad</button>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

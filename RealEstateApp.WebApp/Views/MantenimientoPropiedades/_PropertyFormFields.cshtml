@@ -10,8 +10,8 @@
     </div>
 }
 
-<div class="row">
-    <div class="col-md-6 mb-3">
+<div class="row g-3">
+    <div class="col-md-6">
         <label asp-for="PropertyTypeId" class="form-label"></label>
         <select asp-for="PropertyTypeId" class="form-select">
             <option value="">-- Seleccione --</option>
@@ -22,7 +22,7 @@
         </select>
         <span asp-validation-for="PropertyTypeId" class="text-danger small"></span>
     </div>
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6">
         <label asp-for="SaleTypeId" class="form-label"></label>
         <select asp-for="SaleTypeId" class="form-select">
             <option value="">-- Seleccione --</option>
@@ -33,74 +33,69 @@
         </select>
         <span asp-validation-for="SaleTypeId" class="text-danger small"></span>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-4 mb-3">
+    <div class="col-6 col-md-3">
         <label asp-for="Precio" class="form-label"></label>
         <input asp-for="Precio" class="form-control" />
         <span asp-validation-for="Precio" class="text-danger small"></span>
     </div>
-    <div class="col-md-4 mb-3">
+    <div class="col-6 col-md-3">
         <label asp-for="TamanoTerreno" class="form-label"></label>
         <input asp-for="TamanoTerreno" class="form-control" />
         <span asp-validation-for="TamanoTerreno" class="text-danger small"></span>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-md-3 mb-3">
+    <div class="col-6 col-md-3">
         <label asp-for="CantidadHabitaciones" class="form-label"></label>
         <input asp-for="CantidadHabitaciones" class="form-control" />
         <span asp-validation-for="CantidadHabitaciones" class="text-danger small"></span>
     </div>
-    <div class="col-md-3 mb-3">
+    <div class="col-6 col-md-3">
         <label asp-for="CantidadBanos" class="form-label"></label>
         <input asp-for="CantidadBanos" class="form-control" />
         <span asp-validation-for="CantidadBanos" class="text-danger small"></span>
     </div>
-</div>
 
-<div class="mb-3">
-    <label asp-for="Descripcion" class="form-label"></label>
-    <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
-    <span asp-validation-for="Descripcion" class="text-danger small"></span>
-</div>
-
-<div class="mb-3">
-    <label class="form-label">Mejoras</label>
-    <div class="row">
-        @foreach (var mejora in Model.TodasLasMejoras)
-        {
-            <div class="col-md-4 form-check">
-                <input type="checkbox" class="form-check-input" name="ImprovementIds" value="@mejora.Value"
-                       id="mejora_@mejora.Value" checked="@Model.ImprovementIds.Contains(int.Parse(mejora.Value))" />
-                <label class="form-check-label" for="mejora_@mejora.Value">@mejora.Text</label>
-            </div>
-        }
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger small"></span>
     </div>
-</div>
 
-@if (Model.ImagenesActuales.Count > 0)
-{
-    <div class="mb-3">
-        <label class="form-label">Imágenes actuales</label>
-        <div class="row row-cols-2 row-cols-md-4 g-2">
-            @foreach (var imagen in Model.ImagenesActuales)
+    <div class="col-12">
+        <label class="form-label">Mejoras</label>
+        <div class="row g-2">
+            @foreach (var mejora in Model.TodasLasMejoras)
             {
-                <div class="col text-center">
-                    <img src="@imagen.Url" class="img-fluid rounded mb-1" style="height:100px;object-fit:cover;" />
-                    <div class="form-check d-flex justify-content-center">
-                        <input type="checkbox" class="form-check-input me-1" name="ImagenesAEliminar" value="@imagen.Id" id="img_@imagen.Id" />
-                        <label class="form-check-label small" for="img_@imagen.Id">Eliminar</label>
-                    </div>
+                <div class="col-6 col-md-4 form-check">
+                    <input type="checkbox" class="form-check-input" name="ImprovementIds" value="@mejora.Value"
+                           id="mejora_@mejora.Value" checked="@Model.ImprovementIds.Contains(int.Parse(mejora.Value))" />
+                    <label class="form-check-label" for="mejora_@mejora.Value">@mejora.Text</label>
                 </div>
             }
         </div>
     </div>
-}
 
-<div class="mb-3">
-    <label class="form-label">@(Model.ImagenesActuales.Count > 0 ? "Agregar imágenes nuevas" : "Imágenes (mínimo 1, máximo 4)")</label>
-    <input type="file" name="nuevasImagenes" class="form-control" accept=".jpg,.jpeg,.png" multiple />
+    @if (Model.ImagenesActuales.Count > 0)
+    {
+        <div class="col-12">
+            <label class="form-label">Imágenes actuales</label>
+            <div class="row row-cols-2 row-cols-md-4 g-2">
+                @foreach (var imagen in Model.ImagenesActuales)
+                {
+                    <div class="col text-center">
+                        <img src="@imagen.Url" class="img-fluid rounded-3 mb-1" style="height:100px;width:100%;object-fit:cover;" />
+                        <div class="form-check d-flex justify-content-center align-items-center gap-1">
+                            <input type="checkbox" class="form-check-input mt-0" name="ImagenesAEliminar" value="@imagen.Id" id="img_@imagen.Id" />
+                            <label class="form-check-label small" for="img_@imagen.Id">Eliminar</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="col-12">
+        <label class="form-label">@(Model.ImagenesActuales.Count > 0 ? "Agregar imágenes nuevas" : "Imágenes (mínimo 1, máximo 4)")</label>
+        <input type="file" name="nuevasImagenes" class="form-control" accept=".jpg,.jpeg,.png" multiple />
+    </div>
 </div>

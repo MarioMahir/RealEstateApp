@@ -3,50 +3,58 @@
     ViewData["Title"] = "Listado de los agentes";
 }
 
-<h1 class="mb-4">Listado de los agentes</h1>
+<div class="page-header">
+    <h1>Listado de los agentes</h1>
+</div>
 
 @if (Model.Count == 0)
 {
-    <div class="alert alert-info">No existen agentes registrados.</div>
+    <div class="empty-state">
+        <p>No existen agentes registrados.</p>
+    </div>
 }
 else
 {
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo electrónico</th>
-                <th>Cantidad de propiedades</th>
-                <th>Estado</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var agente in Model)
-            {
-                <tr>
-                    <td>@agente.Nombre</td>
-                    <td>@agente.Apellido</td>
-                    <td>@agente.Correo</td>
-                    <td>@agente.CantidadPropiedades</td>
-                    <td>
-                        <span class="badge @(agente.Activo ? "bg-success" : "bg-secondary")">
-                            @(agente.Activo ? "Activo" : "Inactivo")
-                        </span>
-                    </td>
-                    <td class="text-end">
-                        <form asp-controller="Administrador" asp-action="ToggleAgenteEstado" method="post" class="d-inline"
-                              onsubmit="return confirm('¿Está seguro que desea @(agente.Activo ? "inactivar" : "activar") este agente?');">
-                            <input type="hidden" name="id" value="@agente.Id" />
-                            <button type="submit" class="btn btn-sm @(agente.Activo ? "btn-outline-secondary" : "btn-outline-success")">
-                                @(agente.Activo ? "Inactivar" : "Activar")
-                            </button>
-                        </form>
-                        <a asp-controller="Administrador" asp-action="EliminarAgente" asp-route-id="@agente.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="table-wrap">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo electrónico</th>
+                        <th>Cantidad de propiedades</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var agente in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@agente.Nombre</td>
+                            <td>@agente.Apellido</td>
+                            <td class="text-muted">@agente.Correo</td>
+                            <td>@agente.CantidadPropiedades</td>
+                            <td>
+                                <span class="badge @(agente.Activo ? "bg-success" : "bg-secondary")">
+                                    @(agente.Activo ? "Activo" : "Inactivo")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <form asp-controller="Administrador" asp-action="ToggleAgenteEstado" method="post" class="d-inline"
+                                      onsubmit="return confirm('¿Está seguro que desea @(agente.Activo ? "inactivar" : "activar") este agente?');">
+                                    <input type="hidden" name="id" value="@agente.Id" />
+                                    <button type="submit" class="btn btn-sm @(agente.Activo ? "btn-outline-secondary" : "btn-outline-success")">
+                                        @(agente.Activo ? "Inactivar" : "Activar")
+                                    </button>
+                                </form>
+                                <a asp-controller="Administrador" asp-action="EliminarAgente" asp-route-id="@agente.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }

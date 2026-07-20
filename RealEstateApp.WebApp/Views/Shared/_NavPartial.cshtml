@@ -2,41 +2,60 @@
     var esCliente = User.IsInRole("Cliente");
     var esAgente = User.IsInRole("Agente");
     var esAdministrador = User.IsInRole("Administrador");
+
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    string ActiveClass(string controller, string? action = null)
+    {
+        if (!string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase))
+            return "";
+        if (action is not null && !string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase))
+            return "";
+        return "active";
+    }
+
+    var mantenimientoControllers = new[]
+    {
+        "MantenimientoAdministradores", "MantenimientoDesarrolladores",
+        "MantenimientoTipoPropiedades", "MantenimientoTipoVentas", "MantenimientoMejoras"
+    };
+    var enMantenimientos = mantenimientoControllers.Contains(currentController, StringComparer.OrdinalIgnoreCase);
 }
 <ul class="navbar-nav flex-grow-1">
     @if (!User.Identity!.IsAuthenticated)
     {
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Únete a la app</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Iniciar sesión</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Home")" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Agentes")" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Account", "Register")" asp-controller="Account" asp-action="Register">Únete a la app</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Account", "Login")" asp-controller="Account" asp-action="Login">Iniciar sesión</a></li>
     }
     else if (esCliente)
     {
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Cliente" asp-action="MisPropiedades">Mis propiedades</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Home")" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Agentes")" asp-controller="Agentes" asp-action="Index">Agentes</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Cliente")" asp-controller="Cliente" asp-action="MisPropiedades">Mis propiedades</a></li>
     }
     else if (esAgente)
     {
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agente" asp-action="Index">Home del agente</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="MantenimientoPropiedades" asp-action="Index">Mantenimiento de propiedades</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Agente" asp-action="Perfil">Mi perfil</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Agente", "Index")" asp-controller="Agente" asp-action="Index">Home del agente</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("MantenimientoPropiedades")" asp-controller="MantenimientoPropiedades" asp-action="Index">Mantenimiento de propiedades</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Agente", "Perfil")" asp-controller="Agente" asp-action="Perfil">Mi perfil</a></li>
     }
     else if (esAdministrador)
     {
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Administrador" asp-action="Index">Home del administrador</a></li>
-        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Administrador" asp-action="Agentes">Listado de los agentes</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Administrador", "Index")" asp-controller="Administrador" asp-action="Index">Home del administrador</a></li>
+        <li class="nav-item"><a class="nav-link @ActiveClass("Administrador", "Agentes")" asp-controller="Administrador" asp-action="Agentes">Listado de los agentes</a></li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-dark" href="#" id="menuMantenimientos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle @(enMantenimientos ? "active" : "")" href="#" id="menuMantenimientos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Mantenimientos
             </a>
             <ul class="dropdown-menu" aria-labelledby="menuMantenimientos">
-                <li><a class="dropdown-item" asp-controller="MantenimientoAdministradores" asp-action="Index">Mantenimiento de administradores</a></li>
-                <li><a class="dropdown-item" asp-controller="MantenimientoDesarrolladores" asp-action="Index">Mantenimiento de desarrolladores</a></li>
-                <li><a class="dropdown-item" asp-controller="MantenimientoTipoPropiedades" asp-action="Index">Mantenimiento de tipo de propiedades</a></li>
-                <li><a class="dropdown-item" asp-controller="MantenimientoTipoVentas" asp-action="Index">Mantenimiento de tipo de ventas</a></li>
-                <li><a class="dropdown-item" asp-controller="MantenimientoMejoras" asp-action="Index">Mantenimiento de mejoras</a></li>
+                <li><a class="dropdown-item @ActiveClass("MantenimientoAdministradores")" asp-controller="MantenimientoAdministradores" asp-action="Index">Mantenimiento de administradores</a></li>
+                <li><a class="dropdown-item @ActiveClass("MantenimientoDesarrolladores")" asp-controller="MantenimientoDesarrolladores" asp-action="Index">Mantenimiento de desarrolladores</a></li>
+                <li><a class="dropdown-item @ActiveClass("MantenimientoTipoPropiedades")" asp-controller="MantenimientoTipoPropiedades" asp-action="Index">Mantenimiento de tipo de propiedades</a></li>
+                <li><a class="dropdown-item @ActiveClass("MantenimientoTipoVentas")" asp-controller="MantenimientoTipoVentas" asp-action="Index">Mantenimiento de tipo de ventas</a></li>
+                <li><a class="dropdown-item @ActiveClass("MantenimientoMejoras")" asp-controller="MantenimientoMejoras" asp-action="Index">Mantenimiento de mejoras</a></li>
             </ul>
         </li>
     }
@@ -44,6 +63,6 @@
 @if (User.Identity!.IsAuthenticated)
 {
     <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex">
-        <button type="submit" class="nav-link text-dark btn btn-link">Cerrar sesión</button>
+        <button type="submit" class="nav-link btn btn-link">Cerrar sesión</button>
     </form>
 }

@@ -1,16 +1,16 @@
 @model PropertyDetailViewModel
 
-<div class="row">
-    <div class="col-md-8">
-        <h1>
-            @Model.TipoPropiedad &middot; @Model.TipoVenta
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+            <h1 class="mb-0">@Model.TipoPropiedad &middot; @Model.TipoVenta</h1>
             <span class="badge @(Model.Estado == "Disponible" ? "bg-success" : "bg-secondary")">@Model.Estado</span>
-        </h1>
-        <p class="text-muted">Código: @Model.Codigo</p>
+        </div>
+        <p class="text-muted mb-3">Código @Model.Codigo</p>
 
         @if (Model.Imagenes.Count > 0)
         {
-            <div id="carouselPropiedad" class="carousel slide mb-3" data-bs-ride="carousel">
+            <div id="carouselPropiedad" class="carousel slide mb-4" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @for (var i = 0; i < Model.Imagenes.Count; i++)
                     {
@@ -29,20 +29,25 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Siguiente</span>
                     </button>
+                    <div class="carousel-indicators">
+                        @for (var i = 0; i < Model.Imagenes.Count; i++)
+                        {
+                            <button type="button" data-bs-target="#carouselPropiedad" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Imagen @(i + 1)"></button>
+                        }
+                    </div>
                 }
             </div>
         }
         else
         {
-            <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center mb-3" style="height:300px;">
+            <div class="d-flex align-items-center justify-content-center mb-4 rounded-4" style="height:300px;background-color:var(--bg-alt);">
                 <span class="text-muted">Sin imágenes</span>
             </div>
         }
 
-        <dl class="row">
-            <dt class="col-sm-3">Precio</dt>
-            <dd class="col-sm-9">RD$@Model.Precio.ToString("N0")</dd>
+        <p class="price-tag fs-4 mb-3">RD$@Model.Precio.ToString("N0")</p>
 
+        <dl class="row mb-0">
             <dt class="col-sm-3">Habitaciones</dt>
             <dd class="col-sm-9">@Model.CantidadHabitaciones</dd>
 
@@ -59,12 +64,12 @@
             <dd class="col-sm-9">
                 @if (Model.Mejoras.Count > 0)
                 {
-                    <ul class="mb-0">
+                    <div class="d-flex flex-wrap gap-1">
                         @foreach (var mejora in Model.Mejoras)
                         {
-                            <li>@mejora</li>
+                            <span class="badge bg-primary">@mejora</span>
                         }
-                    </ul>
+                    </div>
                 }
                 else
                 {
@@ -73,19 +78,26 @@
             </dd>
         </dl>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-4">
         <div class="card">
             <div class="card-body text-center">
                 @if (!string.IsNullOrEmpty(Model.FotoAgente))
                 {
-                    <img src="@Model.FotoAgente" class="rounded-circle mb-3" style="width:100px;height:100px;object-fit:cover;" alt="@Model.NombreAgente" />
+                    <img src="@Model.FotoAgente" class="avatar-circle mb-3" alt="@Model.NombreAgente" />
                 }
-                <h5 class="card-title">@Model.NombreAgente</h5>
-                <p class="card-text">
-                    Teléfono: @Model.TelefonoAgente<br />
-                    Correo: @Model.CorreoAgente
+                else
+                {
+                    <div class="avatar-placeholder mx-auto mb-3 fs-4">
+                        @Model.NombreAgente.Substring(0, 1).ToUpperInvariant()
+                    </div>
+                }
+                <h5 class="card-title mb-1">@Model.NombreAgente</h5>
+                <p class="text-muted small mb-3">Agente inmobiliario</p>
+                <p class="card-text text-start small mb-3">
+                    <span class="d-block">Teléfono: @Model.TelefonoAgente</span>
+                    <span class="d-block">Correo: @Model.CorreoAgente</span>
                 </p>
-                <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@Model.AgentId" class="btn btn-outline-primary">
+                <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@Model.AgentId" class="btn btn-outline-primary w-100">
                     Ver más propiedades de este agente
                 </a>
             </div>

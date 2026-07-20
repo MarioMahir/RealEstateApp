@@ -21,7 +21,16 @@
     }
 }
 
-<h1 class="text-danger mb-4">Acceso denegado</h1>
-<p>No tiene permisos para acceder a esta sección.</p>
-
-<a asp-controller="@controlador" asp-action="Index" class="btn btn-primary">@etiqueta</a>
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="m8.5 8.5 7 7M15.5 8.5l-7 7" />
+            </svg>
+            <h1 class="h4 mb-2 mt-1">Acceso denegado</h1>
+            <p class="mb-4">No tiene permisos para acceder a esta sección.</p>
+            <a asp-controller="@controlador" asp-action="Index" class="btn btn-primary">@etiqueta</a>
+        </div>
+    </div>
+</div>

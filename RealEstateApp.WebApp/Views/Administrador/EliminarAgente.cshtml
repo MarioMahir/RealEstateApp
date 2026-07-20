@@ -3,20 +3,28 @@
     ViewData["Title"] = "Eliminar agente";
 }
 
-<h1 class="mb-4">Eliminar agente</h1>
+<div class="page-header">
+    <h1>Eliminar agente</h1>
+</div>
 
-<div class="alert alert-warning">¿Está seguro que desea eliminar este agente y todas sus propiedades?</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="auth-card">
+            <div class="alert alert-warning">¿Está seguro que desea eliminar este agente y todas sus propiedades?</div>
 
-<dl class="row">
-    <dt class="col-sm-2">Nombre</dt>
-    <dd class="col-sm-10">@Model.Nombre @Model.Apellido</dd>
-    <dt class="col-sm-2">Correo</dt>
-    <dd class="col-sm-10">@Model.Correo</dd>
-    <dt class="col-sm-2">Propiedades</dt>
-    <dd class="col-sm-10">@Model.CantidadPropiedades</dd>
-</dl>
+            <dl class="row">
+                <dt class="col-sm-4">Nombre</dt>
+                <dd class="col-sm-8">@Model.Nombre @Model.Apellido</dd>
+                <dt class="col-sm-4">Correo</dt>
+                <dd class="col-sm-8">@Model.Correo</dd>
+                <dt class="col-sm-4">Propiedades</dt>
+                <dd class="col-sm-8">@Model.CantidadPropiedades</dd>
+            </dl>
 
-<form asp-controller="Administrador" asp-action="EliminarAgente" asp-route-id="@Model.Id" method="post">
-    <button type="submit" class="btn btn-danger">Aceptar</button>
-    <a asp-controller="Administrador" asp-action="Agentes" class="btn btn-secondary">Cancelar</a>
-</form>
+            <form asp-controller="Administrador" asp-action="EliminarAgente" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
+                <a asp-controller="Administrador" asp-action="Agentes" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-danger">Aceptar</button>
+            </form>
+        </div>
+    </div>
+</div>

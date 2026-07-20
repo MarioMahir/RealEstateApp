@@ -1,10 +1,10 @@
 @model AgentReplyViewModel
 
-<form asp-controller="Agente" asp-action="Responder" method="post">
+<form asp-controller="Agente" asp-action="Responder" method="post" class="d-flex gap-2 align-items-start">
     <input type="hidden" asp-for="PropertyId" />
     <input type="hidden" asp-for="ClienteId" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="mb-2">
+    <div class="flex-grow-1">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-1"></div>
         <textarea asp-for="Texto" class="form-control" rows="2" placeholder="Escribe tu respuesta..."></textarea>
         <span asp-validation-for="Texto" class="text-danger small"></span>
     </div>

@@ -5,55 +5,63 @@
     ViewData["Title"] = titulo;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">@titulo</h1>
-    <a asp-action="Crear" class="btn btn-primary">@ViewData["EtiquetaCrear"]</a>
+<div class="page-header">
+    <h1>@titulo</h1>
+    <div class="page-header-actions">
+        <a asp-action="Crear" class="btn btn-primary">@ViewData["EtiquetaCrear"]</a>
+    </div>
 </div>
 
 @if (Model.Count == 0)
 {
-    <div class="alert alert-info">@ViewData["EmptyListMessage"]</div>
+    <div class="empty-state">
+        <p>@ViewData["EmptyListMessage"]</p>
+    </div>
 }
 else
 {
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Nombre de usuario</th>
-                <th>Cédula</th>
-                <th>Correo electrónico</th>
-                <th>Estado</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var usuario in Model)
-            {
-                <tr>
-                    <td>@usuario.Nombre</td>
-                    <td>@usuario.Apellido</td>
-                    <td>@usuario.NombreUsuario</td>
-                    <td>@usuario.Cedula</td>
-                    <td>@usuario.CorreoElectronico</td>
-                    <td>
-                        <span class="badge @(usuario.Activo ? "bg-success" : "bg-secondary")">
-                            @(usuario.Activo ? "Activo" : "Inactivo")
-                        </span>
-                    </td>
-                    <td class="text-end">
-                        <a asp-action="Editar" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-primary">Editar</a>
-                        <form asp-action="ToggleEstado" method="post" class="d-inline"
-                              onsubmit="return confirm('¿Está seguro que desea @(usuario.Activo ? "inactivar" : "activar") este @entidad?');">
-                            <input type="hidden" name="id" value="@usuario.Id" />
-                            <button type="submit" class="btn btn-sm @(usuario.Activo ? "btn-outline-secondary" : "btn-outline-success")">
-                                @(usuario.Activo ? "Inactivar" : "Activar")
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="table-wrap">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Nombre de usuario</th>
+                        <th>Cédula</th>
+                        <th>Correo electrónico</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@usuario.Nombre</td>
+                            <td>@usuario.Apellido</td>
+                            <td class="text-muted">@usuario.NombreUsuario</td>
+                            <td class="text-muted">@usuario.Cedula</td>
+                            <td class="text-muted">@usuario.CorreoElectronico</td>
+                            <td>
+                                <span class="badge @(usuario.Activo ? "bg-success" : "bg-secondary")">
+                                    @(usuario.Activo ? "Activo" : "Inactivo")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Editar" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form asp-action="ToggleEstado" method="post" class="d-inline"
+                                      onsubmit="return confirm('¿Está seguro que desea @(usuario.Activo ? "inactivar" : "activar") este @entidad?');">
+                                    <input type="hidden" name="id" value="@usuario.Id" />
+                                    <button type="submit" class="btn btn-sm @(usuario.Activo ? "btn-outline-secondary" : "btn-outline-success")">
+                                        @(usuario.Activo ? "Inactivar" : "Activar")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }

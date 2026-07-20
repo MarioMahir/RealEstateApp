@@ -3,49 +3,57 @@
     ViewData["Title"] = "Mi perfil";
 }
 
-<h1 class="mb-4">Mi perfil</h1>
+<div class="page-header">
+    <h1>Mi perfil</h1>
+</div>
 
 <div class="row">
-    <div class="col-md-6">
-        <form asp-controller="Agente" asp-action="Perfil" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <div class="col-lg-7">
+        <div class="auth-card">
+            <form asp-controller="Agente" asp-action="Perfil" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-            <div class="mb-3 text-center">
-                @if (!string.IsNullOrEmpty(Model.FotoUrl))
-                {
-                    <img src="@Model.FotoUrl" class="rounded-circle mb-2" style="width:120px;height:120px;object-fit:cover;" />
-                }
-                else
-                {
-                    <div class="bg-secondary bg-opacity-25 rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width:120px;height:120px;">
-                        <span class="text-muted small">Sin foto</span>
+                <div class="mb-4 text-center">
+                    @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                    {
+                        <img src="@Model.FotoUrl" class="avatar-circle" style="width:120px;height:120px;" />
+                    }
+                    else
+                    {
+                        <div class="avatar-placeholder mx-auto fs-2" style="width:120px;height:120px;">
+                            @(Model.Nombre.Length > 0 ? Model.Nombre.Substring(0, 1).ToUpperInvariant() : "?")
+                        </div>
+                    }
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
                     </div>
-                }
-            </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellido" class="form-label"></label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Telefono" class="form-label"></label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nueva foto (opcional)</label>
+                        <input type="file" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
+                    </div>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Apellido" class="form-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Telefono" class="form-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Nueva foto (opcional)</label>
-                <input type="file" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
-            </div>
-
-            <a asp-controller="Agente" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        </form>
+                <div class="d-flex gap-2 mt-4">
+                    <a asp-controller="Agente" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

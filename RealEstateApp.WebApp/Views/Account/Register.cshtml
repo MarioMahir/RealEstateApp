@@ -3,65 +3,73 @@
     ViewData["Title"] = "Únete a la app";
 }
 
-<h1 class="mb-4">Únete a la app</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-4">
+            <h1 class="mb-2">Únete a la app</h1>
+            <p class="text-muted">Regístrate como cliente para explorar propiedades u ofrécete como agente inmobiliario.</p>
+        </div>
+        <div class="auth-card">
+            <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellido" class="form-label"></label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Telefono" class="form-label"></label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="NombreUsuario" class="form-label"></label>
+                        <input asp-for="NombreUsuario" class="form-control" />
+                        <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="CorreoElectronico" class="form-label"></label>
+                        <input asp-for="CorreoElectronico" class="form-control" />
+                        <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Contrasena" class="form-label"></label>
+                        <input asp-for="Contrasena" class="form-control" />
+                        <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmarContrasena" class="form-label"></label>
+                        <input asp-for="ConfirmarContrasena" class="form-control" />
+                        <span asp-validation-for="ConfirmarContrasena" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="TipoUsuario" class="form-label"></label>
+                        <select asp-for="TipoUsuario" class="form-select">
+                            <option value="">-- Seleccione --</option>
+                            <option value="@Roles.Cliente">Cliente</option>
+                            <option value="@Roles.Agente">Agente</option>
+                        </select>
+                        <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="foto" class="form-label">Foto de usuario</label>
+                        <input type="file" id="foto" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
+                    </div>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Apellido" class="form-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Telefono" class="form-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="NombreUsuario" class="form-label"></label>
-                <input asp-for="NombreUsuario" class="form-control" />
-                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="CorreoElectronico" class="form-label"></label>
-                <input asp-for="CorreoElectronico" class="form-control" />
-                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Contrasena" class="form-label"></label>
-                <input asp-for="Contrasena" class="form-control" />
-                <span asp-validation-for="Contrasena" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="ConfirmarContrasena" class="form-label"></label>
-                <input asp-for="ConfirmarContrasena" class="form-control" />
-                <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="TipoUsuario" class="form-label"></label>
-                <select asp-for="TipoUsuario" class="form-select">
-                    <option value="">-- Seleccione --</option>
-                    <option value="@Roles.Cliente">Cliente</option>
-                    <option value="@Roles.Agente">Agente</option>
-                </select>
-                <span asp-validation-for="TipoUsuario" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="foto" class="form-label">Foto de usuario</label>
-                <input type="file" id="foto" name="foto" class="form-control" accept=".jpg,.jpeg,.png" />
-            </div>
-
-            <button type="submit" class="btn btn-primary">Registrarse</button>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-link">Volver al inicio</a>
-        </form>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-link">Volver al inicio</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

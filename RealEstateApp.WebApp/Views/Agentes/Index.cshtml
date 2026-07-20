@@ -4,46 +4,51 @@
     var nombreBusqueda = ViewData["NombreBusqueda"] as string;
 }
 
-<h1 class="mb-4">Nuestros agentes</h1>
+<div class="page-header">
+    <div>
+        <h1>Nuestros agentes</h1>
+        <p class="page-header-subtitle">Conoce a los agentes inmobiliarios activos en la plataforma.</p>
+    </div>
+</div>
 
 <form method="get" class="row g-2 mb-4">
-    <div class="col-md-4">
+    <div class="col-12 col-md-5 col-lg-4">
         <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre o apellido" value="@nombreBusqueda" />
     </div>
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-primary">Buscar</button>
+    <div class="col-6 col-md-auto">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
     </div>
-    <div class="col-md-2">
-        <a asp-controller="Agentes" asp-action="Index" class="btn btn-outline-secondary">Limpiar búsqueda</a>
+    <div class="col-6 col-md-auto">
+        <a asp-controller="Agentes" asp-action="Index" class="btn btn-outline-secondary w-100">Limpiar búsqueda</a>
     </div>
 </form>
 
 @if (Model.Count == 0)
 {
-    <div class="alert alert-info">
-        @(string.IsNullOrEmpty(nombreBusqueda) ? "No hay agentes activos registrados en este momento." : "No se encontraron agentes activos con el nombre ingresado.")
+    <div class="empty-state">
+        <p>@(string.IsNullOrEmpty(nombreBusqueda) ? "No hay agentes activos registrados en este momento." : "No se encontraron agentes activos con el nombre ingresado.")</p>
     </div>
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var agente in Model)
         {
             <div class="col">
-                <div class="card h-100 text-center">
+                <div class="card h-100 card-hover text-center">
                     <div class="card-body">
                         @if (!string.IsNullOrEmpty(agente.FotoUrl))
                         {
-                            <img src="@agente.FotoUrl" class="rounded-circle mb-3" style="width:96px;height:96px;object-fit:cover;" alt="@agente.Nombre @agente.Apellido" />
+                            <img src="@agente.FotoUrl" class="avatar-circle mb-3" alt="@agente.Nombre @agente.Apellido" />
                         }
                         else
                         {
-                            <div class="bg-secondary bg-opacity-25 rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:96px;height:96px;">
-                                <span class="text-muted small">Sin foto</span>
+                            <div class="avatar-placeholder mx-auto mb-3 fs-4">
+                                @agente.Nombre.Substring(0, 1).ToUpperInvariant()
                             </div>
                         }
-                        <h5 class="card-title">@agente.Nombre @agente.Apellido</h5>
-                        <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@agente.Id" class="btn btn-outline-primary">Ver propiedades</a>
+                        <h5 class="card-title mb-3">@agente.Nombre @agente.Apellido</h5>
+                        <a asp-controller="Agentes" asp-action="Propiedades" asp-route-id="@agente.Id" class="btn btn-outline-primary btn-sm w-100">Ver propiedades</a>
                     </div>
                 </div>
             </div>

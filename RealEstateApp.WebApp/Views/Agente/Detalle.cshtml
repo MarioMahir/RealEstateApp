@@ -3,121 +3,127 @@
     ViewData["Title"] = $"Propiedad {Model.Propiedad.Codigo}";
 }
 
+<a asp-controller="Agente" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">&larr; Volver</a>
+
 @await Html.PartialAsync("_PropertyDetailInfo", Model.Propiedad)
 
-<hr class="my-4" />
-
-<div class="row">
-    <div class="col-md-6">
-        <h3>Conversaciones</h3>
-        @if (Model.Conversaciones.Count == 0)
-        {
-            <p class="text-muted">Todavía no hay conversaciones sobre esta propiedad.</p>
-        }
-        else
-        {
-            <div class="list-group mb-3">
-                @foreach (var conversacion in Model.Conversaciones)
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="section-title">Conversaciones</h3>
+                @if (Model.Conversaciones.Count == 0)
                 {
-                    <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@conversacion.ClienteId"
-                       class="list-group-item list-group-item-action @(conversacion.ClienteId == Model.ClienteSeleccionadoId ? "active" : "")">
-                        <div class="d-flex justify-content-between">
-                            <strong>@conversacion.NombreCliente</strong>
-                            <small>@conversacion.UltimoMensajeFecha.ToString("dd/MM/yyyy HH:mm")</small>
-                        </div>
-                        <div class="text-truncate small">@conversacion.UltimoMensajeTexto</div>
-                    </a>
+                    <p class="text-muted">Todavía no hay conversaciones sobre esta propiedad.</p>
                 }
-            </div>
-        }
-
-        @if (Model.ClienteSeleccionadoId is not null)
-        {
-            <h5>Conversación con @Model.ClienteSeleccionadoNombre</h5>
-            <div class="border rounded p-3 mb-3" style="max-height:300px;overflow-y:auto;">
-                @foreach (var mensaje in Model.HiloSeleccionado)
+                else
                 {
-                    <div class="mb-2 @(mensaje.Remitente == "Agente" ? "text-end" : "text-start")">
-                        <div class="d-inline-block p-2 rounded @(mensaje.Remitente == "Agente" ? "bg-primary text-white" : "bg-light")">
-                            <div>@mensaje.Texto</div>
-                            <small class="@(mensaje.Remitente == "Agente" ? "text-white-50" : "text-muted")">@mensaje.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
-                        </div>
+                    <div class="list-group mb-3">
+                        @foreach (var conversacion in Model.Conversaciones)
+                        {
+                            <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@conversacion.ClienteId"
+                               class="list-group-item list-group-item-action @(conversacion.ClienteId == Model.ClienteSeleccionadoId ? "active" : "")">
+                                <div class="d-flex justify-content-between">
+                                    <strong>@conversacion.NombreCliente</strong>
+                                    <small>@conversacion.UltimoMensajeFecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                                <div class="text-truncate small">@conversacion.UltimoMensajeTexto</div>
+                            </a>
+                        }
                     </div>
                 }
-            </div>
 
-            @if (Model.Propiedad.Estado == "Disponible")
-            {
-                @await Html.PartialAsync("_AgentReplyForm", Model.Respuesta)
-            }
-            else
-            {
-                <div class="alert alert-secondary">Esta propiedad ya no admite mensajes nuevos.</div>
-            }
-        }
+                @if (Model.ClienteSeleccionadoId is not null)
+                {
+                    <h5 class="fs-6 fw-bold mb-2">Conversación con @Model.ClienteSeleccionadoNombre</h5>
+                    <div class="border rounded-3 p-3 mb-3" style="max-height:300px;overflow-y:auto;background-color:var(--bg-alt);">
+                        @foreach (var mensaje in Model.HiloSeleccionado)
+                        {
+                            <div class="mb-2 @(mensaje.Remitente == "Agente" ? "text-end" : "text-start")">
+                                <div class="d-inline-block chat-bubble @(mensaje.Remitente == "Agente" ? "bg-primary text-white" : "bg-white")">
+                                    <div>@mensaje.Texto</div>
+                                    <small class="@(mensaje.Remitente == "Agente" ? "text-white-50" : "text-muted")">@mensaje.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.Propiedad.Estado == "Disponible")
+                    {
+                        @await Html.PartialAsync("_AgentReplyForm", Model.Respuesta)
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary mb-0">Esta propiedad ya no admite mensajes nuevos.</div>
+                    }
+                }
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <h3>Ofertas</h3>
-        @if (Model.GruposDeOfertas.Count == 0)
-        {
-            <p class="text-muted">Todavía no hay ofertas sobre esta propiedad.</p>
-        }
-        else
-        {
-            @foreach (var grupo in Model.GruposDeOfertas)
-            {
-                var seleccionado = grupo.ClienteId == Model.ClienteSeleccionadoId;
-                <div class="card mb-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@grupo.ClienteId" class="@(seleccionado ? "fw-bold" : "")">
-                            @grupo.NombreCliente
-                        </a>
-                        <small class="text-muted">
-                            @grupo.CantidadOfertas oferta(s) &middot; última: RD$@grupo.UltimaOferta.ToString("N0")
-                            <span class="badge @(grupo.EstadoUltimaOferta == "Aceptada" ? "bg-success" : grupo.EstadoUltimaOferta == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@grupo.EstadoUltimaOferta</span>
-                        </small>
-                    </div>
-                    @if (seleccionado)
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="section-title">Ofertas</h3>
+                @if (Model.GruposDeOfertas.Count == 0)
+                {
+                    <p class="text-muted mb-0">Todavía no hay ofertas sobre esta propiedad.</p>
+                }
+                else
+                {
+                    @foreach (var grupo in Model.GruposDeOfertas)
                     {
-                        <ul class="list-group list-group-flush">
-                            @foreach (var oferta in grupo.Ofertas)
+                        var seleccionado = grupo.ClienteId == Model.ClienteSeleccionadoId;
+                        <div class="card mb-3 @(seleccionado ? "" : "bg-transparent")" style="@(seleccionado ? "" : "box-shadow:none;")">
+                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-1">
+                                <a asp-controller="Agente" asp-action="Detalle" asp-route-id="@Model.Propiedad.Id" asp-route-clienteId="@grupo.ClienteId" class="@(seleccionado ? "fw-bold" : "")">
+                                    @grupo.NombreCliente
+                                </a>
+                                <small class="text-muted d-flex align-items-center gap-1">
+                                    @grupo.CantidadOfertas oferta(s) &middot; última: RD$@grupo.UltimaOferta.ToString("N0")
+                                    <span class="badge @(grupo.EstadoUltimaOferta == "Aceptada" ? "bg-success" : grupo.EstadoUltimaOferta == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@grupo.EstadoUltimaOferta</span>
+                                </small>
+                            </div>
+                            @if (seleccionado)
                             {
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        RD$@oferta.Monto.ToString("N0")
-                                        <br />
-                                        <small class="text-muted">@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
-                                    </div>
-                                    <div class="text-end">
-                                        <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
-                                        @if (oferta.Estado == "Pendiente")
-                                        {
-                                            <div class="mt-1">
-                                                <form asp-controller="Agente" asp-action="AceptarOferta" method="post" class="d-inline">
-                                                    <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                    <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
-                                                    <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
-                                                </form>
-                                                <form asp-controller="Agente" asp-action="RechazarOferta" method="post" class="d-inline">
-                                                    <input type="hidden" name="offerId" value="@oferta.Id" />
-                                                    <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Rechazar</button>
-                                                </form>
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var oferta in grupo.Ofertas)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span class="fw-semibold">RD$@oferta.Monto.ToString("N0")</span>
+                                                <br />
+                                                <small class="text-muted">@oferta.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
                                             </div>
-                                        }
-                                    </div>
-                                </li>
+                                            <div class="text-end">
+                                                <span class="badge @(oferta.Estado == "Aceptada" ? "bg-success" : oferta.Estado == "Rechazada" ? "bg-danger" : "bg-warning text-dark")">@oferta.Estado</span>
+                                                @if (oferta.Estado == "Pendiente")
+                                                {
+                                                    <div class="mt-1">
+                                                        <form asp-controller="Agente" asp-action="AceptarOferta" method="post" class="d-inline">
+                                                            <input type="hidden" name="offerId" value="@oferta.Id" />
+                                                            <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
+                                                        </form>
+                                                        <form asp-controller="Agente" asp-action="RechazarOferta" method="post" class="d-inline">
+                                                            <input type="hidden" name="offerId" value="@oferta.Id" />
+                                                            <input type="hidden" name="propertyId" value="@Model.Propiedad.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Rechazar</button>
+                                                        </form>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
                             }
-                        </ul>
+                        </div>
                     }
-                </div>
-            }
-        }
+                }
+            </div>
+        </div>
     </div>
 </div>
-
-<a asp-controller="Agente" asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

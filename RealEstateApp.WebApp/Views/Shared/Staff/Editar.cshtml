@@ -6,51 +6,57 @@
 <h1 class="mb-4">Editar</h1>
 
 <div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <div class="col-lg-8">
+        <div class="auth-card">
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Apellido" class="form-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Cedula" class="form-label"></label>
-                <input asp-for="Cedula" class="form-control" />
-                <span asp-validation-for="Cedula" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="CorreoElectronico" class="form-label"></label>
-                <input asp-for="CorreoElectronico" class="form-control" />
-                <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="NombreUsuario" class="form-label"></label>
-                <input asp-for="NombreUsuario" class="form-control" />
-                <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="NuevaContrasena" class="form-label"></label>
-                <input asp-for="NuevaContrasena" class="form-control" />
-                <span asp-validation-for="NuevaContrasena" class="text-danger small"></span>
-                <div class="form-text">Si se deja vacía, se mantiene la contraseña actual.</div>
-            </div>
-            <div class="mb-3">
-                <label asp-for="ConfirmarNuevaContrasena" class="form-label"></label>
-                <input asp-for="ConfirmarNuevaContrasena" class="form-control" />
-                <span asp-validation-for="ConfirmarNuevaContrasena" class="text-danger small"></span>
-            </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellido" class="form-label"></label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Cedula" class="form-label"></label>
+                        <input asp-for="Cedula" class="form-control" />
+                        <span asp-validation-for="Cedula" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CorreoElectronico" class="form-label"></label>
+                        <input asp-for="CorreoElectronico" class="form-control" />
+                        <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="NombreUsuario" class="form-label"></label>
+                        <input asp-for="NombreUsuario" class="form-control" />
+                        <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="NuevaContrasena" class="form-label"></label>
+                        <input asp-for="NuevaContrasena" class="form-control" />
+                        <span asp-validation-for="NuevaContrasena" class="text-danger small"></span>
+                        <div class="form-text">Si se deja vacía, se mantiene la contraseña actual.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmarNuevaContrasena" class="form-label"></label>
+                        <input asp-for="ConfirmarNuevaContrasena" class="form-control" />
+                        <span asp-validation-for="ConfirmarNuevaContrasena" class="text-danger small"></span>
+                    </div>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            <a asp-action="Index" class="btn btn-secondary">Volver atrás</a>
-        </form>
+                <div class="d-flex gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
