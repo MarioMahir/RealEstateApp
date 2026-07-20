@@ -10,7 +10,7 @@ using RealEstateApp.WebAPI.Services;
 namespace RealEstateApp.WebAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;

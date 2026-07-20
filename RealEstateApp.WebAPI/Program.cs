@@ -96,7 +96,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Pega el token JWT obtenido en /api/Account/Login (sin la palabra 'Bearer').",
+        Description = "Pega el token JWT obtenido en /api/v1/Account/Login (sin la palabra 'Bearer').",
         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
     };
     options.AddSecurityDefinition("Bearer", bearerScheme);

@@ -15,7 +15,7 @@ namespace RealEstateApp.WebAPI.Controllers;
 // aporta el constructor y 3 propiedades con los mensajes exactos de su
 // entidad (NotFoundMessage, DuplicateNameMessage, DuplicateNameOnUpdateMessage).
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public abstract class CatalogControllerBase<TEntity> : ControllerBase where TEntity : class, ICatalogItem
 {
     protected readonly IGenericService<TEntity> Service;
