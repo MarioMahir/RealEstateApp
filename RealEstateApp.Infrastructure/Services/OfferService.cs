@@ -26,8 +26,8 @@ public class OfferService : GenericService<Offer>, IOfferService
         if (offer is null) return OfferActionStatus.NotFound;
         if (offer.PropertyId != propertyId) return OfferActionStatus.PropertyMismatch;
         if (offer.Property.AgentId != agentId) return OfferActionStatus.NotOwnedByAgent;
-        if (offer.Property.Estado != PropertyStatus.Disponible) return OfferActionStatus.PropertyNotAvailable;
         if (offer.Estado != OfferStatus.Pendiente) return OfferActionStatus.NotPending;
+        if (offer.Property.Estado != PropertyStatus.Disponible) return OfferActionStatus.PropertyNotAvailable;
 
         var pendientes = Repository.Query()
             .Where(o => o.PropertyId == offer.PropertyId && o.Estado == OfferStatus.Pendiente)
