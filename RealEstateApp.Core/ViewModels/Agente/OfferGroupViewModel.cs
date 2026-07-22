@@ -7,8 +7,6 @@ public class OfferGroupViewModel
     public string ClienteId { get; set; } = string.Empty;
     public string NombreCliente { get; set; } = string.Empty;
 
-    // Ordenadas de mas reciente a mas antigua (ver AgenteController); las 3
-    // propiedades de resumen de abajo se derivan de ese orden.
     public List<OfferItemViewModel> Ofertas { get; set; } = new();
 
     public int CantidadOfertas => Ofertas.Count;

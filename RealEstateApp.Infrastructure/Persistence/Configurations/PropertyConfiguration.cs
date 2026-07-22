@@ -12,17 +12,12 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
             .IsRequired()
             .HasMaxLength(6);
 
-        // Indice unico real ademas de la verificacion en PropertyService: cierra
-        // la condicion de carrera del generador aleatorio de 6 digitos.
         builder.HasIndex(p => p.Codigo).IsUnique();
 
         builder.Property(p => p.Descripcion).IsRequired();
         builder.Property(p => p.Precio).HasPrecision(18, 2);
         builder.Property(p => p.TamanoTerreno).HasPrecision(18, 2);
 
-        // Cascade solo hacia los catalogos y hacia si misma via Property; nunca
-        // cascade directo desde ApplicationUser (ver comentario en PropertyImage
-        // /Offer/Message/Favorite: el borrado de un Agente se resuelve en codigo).
         builder.HasOne(p => p.PropertyType)
             .WithMany(pt => pt.Properties)
             .HasForeignKey(p => p.PropertyTypeId)

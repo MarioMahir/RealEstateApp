@@ -10,12 +10,6 @@ using RealEstateApp.Core.ViewModels.Administrador;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Base compartida por "Mantenimiento de administradores" y "Mantenimiento de
-// desarrolladores": mismos campos, mismo CRUD (Crear/Editar/Activar-Inactivar,
-// sin Eliminar -- ver la guia del proyecto). La unica diferencia real de comportamiento
-// es la autoproteccion (AplicaAutoproteccion), que solo aplica a
-// Administrador: un admin nunca gestiona su propio registro al administrar
-// Desarrolladores (son roles distintos), asi que ahi no hace falta.
 [Authorize(Roles = Roles.Administrador)]
 public abstract class StaffMaintenanceControllerBase : Controller
 {
@@ -37,8 +31,6 @@ public abstract class StaffMaintenanceControllerBase : Controller
     protected abstract string Titulo { get; }
     protected abstract string EtiquetaCrear { get; }
 
-    // "administrador" / "desarrollador" -- para construir el mensaje de
-    // confirmacion exacto de activar/inactivar en la vista compartida.
     protected abstract string EntidadSingular { get; }
     protected abstract string EmptyListMessage { get; }
     protected abstract string NotFoundMessage { get; }
@@ -47,8 +39,6 @@ public abstract class StaffMaintenanceControllerBase : Controller
     protected abstract string ActivateSuccessMessage { get; }
     protected abstract string DeactivateSuccessMessage { get; }
 
-    // Solo relevantes cuando AplicaAutoproteccion == true (Administrador);
-    // Desarrollador nunca los lee.
     protected virtual string CannotModifySelfMessage => string.Empty;
     protected virtual string CannotDeactivateSelfMessage => string.Empty;
     protected virtual string LastActiveMessage => string.Empty;

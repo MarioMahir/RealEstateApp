@@ -6,9 +6,6 @@ namespace RealEstateApp.Shared;
 
 public static class SharedServiceRegistration
 {
-    // webRootPath viene de builder.Environment.WebRootPath en el Program.cs de
-    // cada host -- asi Shared (un classlib puro) no necesita depender de
-    // IWebHostEnvironment del framework web.
     public static IServiceCollection AddSharedServices(this IServiceCollection services, IConfiguration configuration, string webRootPath)
     {
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));

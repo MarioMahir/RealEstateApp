@@ -12,9 +12,6 @@ using RealEstateApp.Core.ViewModels.Property;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// "Mantenimiento de propiedades" (Agente): listado solo Disponible + crear +
-// editar + eliminar. Una propiedad Vendida ya no se puede editar ni eliminar
-// desde aqui (sigue viendose en Home del agente, con etiqueta).
 [Authorize(Roles = Roles.Agente)]
 public class MantenimientoPropiedadesController : Controller
 {
@@ -306,12 +303,6 @@ public class MantenimientoPropiedadesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Defensa contra una condicion de carrera real (no solo teorica): el
-    // formulario se llena con el catalogo vigente al momento de cargarlo, pero
-    // un Administrador podria eliminar un tipo de propiedad/venta/mejora
-    // mientras el agente todavia tiene el formulario abierto. Sin esto, el
-    // INSERT/UPDATE fallaria con una FK violation no manejada (500) en vez de
-    // un mensaje de validacion normal.
     private async Task ValidarReferenciasAsync(PropertyFormViewModel modelo)
     {
         var tiposValidos = (await _propertyTypeService.GetAllAsync()).Select(t => t.Id).ToHashSet();

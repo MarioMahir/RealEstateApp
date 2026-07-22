@@ -6,8 +6,6 @@ using RealEstateApp.Core.Entities;
 
 namespace RealEstateApp.WebAPI.Services;
 
-// JWT es una preocupacion exclusiva de la WebAPI: Core/Infrastructure no
-// conocen este servicio en absoluto.
 public class JwtTokenService : IJwtTokenService
 {
     private readonly IConfiguration _configuration;

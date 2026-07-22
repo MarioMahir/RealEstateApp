@@ -2,10 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.ViewModels.Administrador;
 
-// Compartido por "Editar administrador" y "Editar desarrollador". La
-// contrasena es opcional aqui (a diferencia de Crear): si se deja vacia se
-// mantiene la actual; si se ingresa, la confirmacion es obligatoria y debe
-// coincidir (ver Validate).
 public class EditarUsuarioViewModel : IValidatableObject
 {
     public string Id { get; set; } = string.Empty;

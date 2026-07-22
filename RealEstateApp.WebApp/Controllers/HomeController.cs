@@ -30,10 +30,6 @@ public class HomeController : Controller
         _mapper = mapper;
     }
 
-    // Publico: cualquier visitante (autenticado o no) puede buscar/filtrar
-    // propiedades disponibles. Mismos filtros que Agentes/Propiedades. Para un
-    // Cliente autenticado esta MISMA accion es "Home del cliente" (= Home
-    // publico + marcar/desmarcar favorito), sin una ruta separada.
     [HttpGet]
     public async Task<IActionResult> Index(PropertyBrowseViewModel filtro)
     {
@@ -59,8 +55,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        // El Cliente tiene su propia version enriquecida (chat + ofertas) en
-        // ClienteController.Detalle; esta vista publica nunca debe mostrarsela.
         if (User.IsInRole(Roles.Cliente))
             return RedirectToAction(nameof(ClienteController.Detalle), "Cliente", new { id });
 

@@ -2,8 +2,6 @@ using RealEstateApp.Core.Enums;
 
 namespace RealEstateApp.Core.Entities;
 
-// No existe una entidad "Conversacion" separada: una conversacion es, en la
-// practica, el conjunto de Message que comparten (ClienteId, AgenteId, PropertyId).
 public class Message
 {
     public int Id { get; set; }

@@ -4,9 +4,6 @@ using RealEstateApp.Core.Interfaces.Services;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Sin autoproteccion a proposito: un Administrador nunca gestiona su propio
-// registro aqui (su propio usuario es de rol Administrador, no Desarrollador
-// -- son roles distintos y mutuamente excluyentes en este sistema).
 public class MantenimientoDesarrolladoresController : StaffMaintenanceControllerBase
 {
     public MantenimientoDesarrolladoresController(

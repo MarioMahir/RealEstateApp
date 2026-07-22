@@ -3,11 +3,6 @@ using RealEstateApp.Core.Interfaces.Services;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Eliminar una mejora solo quita el vinculo N:M con las propiedades que la
-// tengan asignada (ver PropertyImprovementConfiguration): nunca elimina
-// propiedades, imagenes, ofertas, mensajes ni favoritos -- por eso el mensaje
-// de confirmacion aqui NO menciona propiedades, a diferencia de los otros dos
-// catalogos.
 public class MantenimientoMejorasController : CatalogMaintenanceControllerBase<Improvement>
 {
     private readonly IPropertyService _propertyService;

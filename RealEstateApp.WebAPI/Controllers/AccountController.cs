@@ -22,7 +22,6 @@ public class AccountController : ControllerBase
         _jwtTokenService = jwtTokenService;
     }
 
-    // Publico: sin [Authorize], nada mas registrado.
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequestDto dto)
     {
@@ -36,9 +35,6 @@ public class AccountController : ControllerBase
 
         var roles = await _accountService.GetRolesAsync(result.User!);
 
-        // Login valido y usuario activo, pero el rol no esta autorizado a
-        // consumir la API (Cliente/Agente son exclusivos de la WebApp) -> 403,
-        // no 401: las credenciales SI eran correctas.
         if (!roles.Contains(Roles.Administrador) && !roles.Contains(Roles.Desarrollador))
             return StatusCode(StatusCodes.Status403Forbidden,
                 new { message = "Acceso denegado. No tiene permisos para realizar esta acción." });

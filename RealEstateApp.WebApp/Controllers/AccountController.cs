@@ -40,8 +40,6 @@ public class AccountController : Controller
         return View(new RegisterViewModel());
     }
 
-    // Registro publico: solo Cliente o Agente (Administrador/Desarrollador se
-    // crean exclusivamente desde el panel de administracion, Etapa 5).
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel modelo, IFormFile? foto)
@@ -114,9 +112,6 @@ public class AccountController : Controller
         if (User.Identity!.IsAuthenticated)
             return RedirectToAction(nameof(Index), "Home");
 
-        // El esquema de cookies redirige aqui con ?ReturnUrl= cuando un
-        // usuario no autenticado intenta acceder directamente a una pantalla
-        // privada -- distinto de llegar por el enlace normal "Iniciar sesion".
         if (!string.IsNullOrEmpty(returnUrl))
             ViewData["Mensaje"] = "Debe iniciar sesión para acceder a esta funcionalidad.";
 
@@ -146,9 +141,6 @@ public class AccountController : Controller
 
         var roles = await _accountService.GetRolesAsync(resultado.User!);
 
-        // Desarrollador es un rol exclusivo de la WebAPI -- credenciales
-        // correctas, pero sin acceso aqui (mensaje propio, no un 401/403 crudo
-        // como en la WebAPI).
         if (!roles.Contains(Roles.Administrador) && !roles.Contains(Roles.Cliente) && !roles.Contains(Roles.Agente))
         {
             ModelState.AddModelError(string.Empty, "El usuario no tiene un rol válido asignado. Póngase en contacto con un administrador.");
@@ -175,8 +167,6 @@ public class AccountController : Controller
         return View();
     }
 
-    // Consumido desde el enlace del correo de activacion (Cliente). Reutiliza
-    // el token de confirmacion nativo de Identity; ver AccountService.
     [HttpGet]
     public async Task<IActionResult> ActivateAccount(string userId, string token)
     {
@@ -216,10 +206,6 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            // Un fallo de SMTP (credenciales/host aun no configurados, corte de
-            // red, etc.) no debe tumbar el registro, que ya se persistio: la
-            // cuenta simplemente queda a la espera de un correo que no llego.
-            // El enlace se deja en el log para poder activar manualmente en dev.
             _logger.LogWarning(ex, "No se pudo enviar el correo de activación a {Email}. Enlace: {Enlace}", usuario.Email, enlace);
             return false;
         }

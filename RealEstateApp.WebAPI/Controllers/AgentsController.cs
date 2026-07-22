@@ -57,9 +57,6 @@ public class AgentsController : ControllerBase
         if (!Guid.TryParse(id, out _))
             return BadRequest(new { message = "El id del agente no tiene un formato válido." });
 
-        // dto.Estado es bool? justo para que [Required] detecte un cuerpo sin
-        // el campo (en un bool no-nullable, [Required] es un no-op); si llego
-        // aqui, ApiController ya garantizo que no es null.
         var updated = await _agentService.ChangeStatusAsync(id, dto.Estado!.Value);
         return updated
             ? NoContent()

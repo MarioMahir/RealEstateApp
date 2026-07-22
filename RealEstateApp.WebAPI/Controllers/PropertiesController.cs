@@ -32,11 +32,6 @@ public class PropertiesController : ControllerBase
         return Ok(_mapper.Map<List<PropertyDto>>(properties));
     }
 
-    // Sin restriccion de ruta {id:int} a proposito: con esa restriccion, un id
-    // no numerico (ej. "abc") ni siquiera llega a este controlador -- el
-    // routing de ASP.NET Core devuelve un 404 crudo antes de Authorize/accion,
-    // en vez del 400 que pide el documento funcional para un id con formato
-    // invalido.
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id)
     {

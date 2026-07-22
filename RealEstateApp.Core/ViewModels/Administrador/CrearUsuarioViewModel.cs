@@ -2,9 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.ViewModels.Administrador;
 
-// Compartido por "Crear administrador" y "Crear desarrollador" -- mismos
-// campos exactos en el documento funcional. Ambos se crean Activos de
-// inmediato (a diferencia del auto-registro publico de Cliente/Agente).
 public class CrearUsuarioViewModel
 {
     [Required(ErrorMessage = "Debe completar todos los campos requeridos.")]

@@ -7,10 +7,6 @@ using RealEstateApp.Core.ViewModels.Administrador;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Etapa 2: solo los indicadores (Home del administrador). Etapa 5 agrega el
-// listado de agentes (activar/inactivar/eliminar en cascada). Los
-// mantenimientos de administradores/desarrolladores/catalogos viven en sus
-// propios controladores (Mantenimiento*).
 [Authorize(Roles = Roles.Administrador)]
 public class AdministradorController : Controller
 {
@@ -32,7 +28,6 @@ public class AdministradorController : Controller
         return View(indicadores);
     }
 
-    // "Listado de los agentes": todos, activos e inactivos.
     public async Task<IActionResult> Agentes()
     {
         var agentes = await _agentService.GetAllAsync();

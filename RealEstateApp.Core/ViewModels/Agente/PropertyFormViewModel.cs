@@ -3,10 +3,6 @@ using RealEstateApp.Core.ViewModels;
 
 namespace RealEstateApp.Core.ViewModels.Agente;
 
-// Compartido por Crear y Editar ("Mantenimiento de propiedades"). Codigo e
-// ImagenesActuales solo se usan en Editar (Codigo es inmutable, nunca se
-// manda de vuelta al servicio; ImagenesActuales es solo para mostrar +
-// permitir marcar cuales eliminar).
 public class PropertyFormViewModel : IValidatableObject
 {
     public int Id { get; set; }

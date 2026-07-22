@@ -15,10 +15,6 @@ public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
             .HasForeignKey(f => f.PropertyId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Restrict hacia ApplicationUser: todo el cascade real fluye a traves de
-        // Property, nunca directo desde el usuario (evita "multiple cascade
-        // paths" de SQL Server al converger Offer/Message/Favorite sobre Property
-        // y sobre ApplicationUser a la vez).
         builder.HasOne(f => f.Cliente)
             .WithMany(u => u.Favorites)
             .HasForeignKey(f => f.ClienteId)

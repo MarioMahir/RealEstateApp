@@ -2,8 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.DTOs.Catalog;
 
-// Cuerpo de solicitud compartido por Create/Update de PropertyType, SaleType e
-// Improvement: los tres piden exactamente Nombre + Descripcion.
 public class CatalogItemUpsertDto
 {
     [Required(ErrorMessage = "El nombre es requerido.")]

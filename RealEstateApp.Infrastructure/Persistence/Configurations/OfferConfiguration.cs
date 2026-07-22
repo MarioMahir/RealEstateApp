@@ -15,7 +15,6 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
             .HasForeignKey(o => o.PropertyId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Ver nota en FavoriteConfiguration sobre por que este lado es Restrict.
         builder.HasOne(o => o.Cliente)
             .WithMany(u => u.Offers)
             .HasForeignKey(o => o.ClienteId)

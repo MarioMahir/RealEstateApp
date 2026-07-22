@@ -103,10 +103,6 @@ public class AgentService : IAgentService
         var user = await GetAgentUserOrNullAsync(agentId);
         if (user is null) return false;
 
-        // Borra primero las Property del agente: eso SI cascada (a nivel de
-        // FK real) imagenes/ofertas/mensajes/favoritos/mejoras. El FK
-        // Agente->Property es Restrict a proposito (ver Modelo de dominio en
-        // la guia del proyecto), asi que el ApplicationUser solo puede borrarse despues.
         var properties = await _propertyRepository.Query()
             .Where(p => p.AgentId == agentId)
             .Include(p => p.Images)

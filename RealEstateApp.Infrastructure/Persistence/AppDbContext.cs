@@ -25,8 +25,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole, str
     {
         base.OnModelCreating(builder);
 
-        // Fluent API exclusivamente aqui: las entidades de Core quedan como POCOs
-        // limpios, sin un solo atributo de EF Core.
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

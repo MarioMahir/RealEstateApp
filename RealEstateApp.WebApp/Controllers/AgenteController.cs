@@ -42,7 +42,6 @@ public class AgenteController : Controller
 
     private string AgentId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-    // Home del agente: solo lectura, sus propiedades Disponible + Vendida.
     public async Task<IActionResult> Index()
     {
         var propiedades = await _propertyService.GetAllByAgentAsync(AgentId);
@@ -54,9 +53,6 @@ public class AgenteController : Controller
         return View(modelo);
     }
 
-    // Detalle de propiedad (agente): conversaciones agrupadas por cliente
-    // (listado -> hilo completo + responder) y ofertas agrupadas por cliente
-    // (listado -> aceptar/rechazar). Funciona para Disponible y Vendida.
     [HttpGet]
     public async Task<IActionResult> Detalle(int id, string? clienteId)
     {

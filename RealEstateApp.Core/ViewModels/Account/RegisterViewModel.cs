@@ -36,8 +36,6 @@ public class RegisterViewModel
     [Display(Name = "Confirmar contraseña")]
     public string ConfirmarContrasena { get; set; } = string.Empty;
 
-    // "Cliente" o "Agente" -- el registro publico nunca crea Administrador ni
-    // Desarrollador.
     [Required(ErrorMessage = "Debe seleccionar un tipo de usuario.")]
     [Display(Name = "Tipo de usuario")]
     public string TipoUsuario { get; set; } = string.Empty;

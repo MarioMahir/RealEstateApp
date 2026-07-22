@@ -2,8 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.DTOs.Account;
 
-// Base compartida por el registro de Administrador y de Desarrollador via API:
-// mismos campos exactos segun el documento funcional.
 public abstract class RegisterUserDto
 {
     [Required(ErrorMessage = "El nombre es requerido.")]

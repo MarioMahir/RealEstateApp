@@ -7,11 +7,6 @@ using RealEstateApp.Core.ViewModels.Administrador;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Base compartida por los 3 mantenimientos de catalogo (tipo de propiedad,
-// tipo de venta, mejora): mismo CRUD exacto, solo cambian los mensajes y como
-// se cuentan las propiedades asociadas (ver ObtenerConteosAsync). Mismo
-// patron que WebAPI/Controllers/CatalogControllerBase<TEntity> (Etapa 1),
-// aplicado ahora a la WebApp con vistas compartidas en Views/Shared/Catalogo/.
 [Authorize(Roles = Roles.Administrador)]
 public abstract class CatalogMaintenanceControllerBase<TEntity> : Controller where TEntity : class, ICatalogItem, new()
 {
@@ -37,15 +32,8 @@ public abstract class CatalogMaintenanceControllerBase<TEntity> : Controller whe
     protected abstract string DeleteErrorMessage { get; }
     protected abstract string DeleteSuccessMessage { get; }
 
-    // Cada catalogo cuenta "propiedades asociadas" de forma distinta
-    // (PropertyTypeId/SaleTypeId son FK directo; Improvement es N:M via
-    // PropertyImprovement), asi que esto lo resuelve cada subclase concreta.
     protected abstract Task<Dictionary<int, int>> ObtenerConteosAsync();
 
-    // URLs de imagenes que quedaran huerfanas en disco si se elimina este item
-    // (cascada real de FK hacia Property) -- vacio por defecto, ya que
-    // eliminar una Mejora nunca cascada Property/imagenes. PropertyType y
-    // SaleType lo sobrescriben porque su FK hacia Property si es Cascade.
     protected virtual Task<List<string>> ObtenerImagenesAEliminarAsync(int id) => Task.FromResult(new List<string>());
 
     public async Task<IActionResult> Index()

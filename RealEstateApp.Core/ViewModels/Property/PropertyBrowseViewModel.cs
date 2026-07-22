@@ -2,10 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.ViewModels.Property;
 
-// Forma compartida por el Home publico/cliente y por "propiedades de un
-// agente": mismos filtros combinables, mismo listado. Busqueda por Codigo es
-// una via alterna al filtrado normal (si viene Codigo, ignora los demas
-// filtros y busca esa unica propiedad disponible).
 public class PropertyBrowseViewModel : IValidatableObject
 {
     [Display(Name = "Código de propiedad")]

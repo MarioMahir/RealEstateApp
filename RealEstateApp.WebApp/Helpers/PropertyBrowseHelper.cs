@@ -7,10 +7,6 @@ using RealEstateApp.Core.ViewModels.Property;
 
 namespace RealEstateApp.WebApp.Helpers;
 
-// Logica de busqueda/filtrado compartida por Home (publico/cliente) y por
-// Agentes/Propiedades (mismos filtros, alcance opcional a un solo agente) --
-// una sola implementacion garantiza que ambas pantallas se comporten
-// identico, tal como exige el documento funcional.
 internal static class PropertyBrowseHelper
 {
     public static async Task ApplyAsync(

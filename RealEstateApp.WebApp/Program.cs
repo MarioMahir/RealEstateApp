@@ -7,9 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSharedServices(builder.Configuration, builder.Environment.WebRootPath);
 
-// AddIdentity (dentro de AddInfrastructure) ya deja el esquema de cookies de
-// Identity como esquema de autenticacion por defecto -- exactamente lo que
-// necesita la WebApp. No se toca AddAuthentication aqui a proposito.
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";

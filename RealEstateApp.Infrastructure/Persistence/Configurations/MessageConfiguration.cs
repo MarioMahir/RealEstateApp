@@ -15,12 +15,6 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
             .HasForeignKey(m => m.PropertyId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Message tiene DOS FKs hacia ApplicationUser (Cliente y Agente). Ambas
-        // deben ser Restrict: si alguna fuera Cascade, SQL Server rechaza la
-        // migracion (dos rutas de cascada distintas hacia la misma tabla padre
-        // desde la misma tabla hija). Sin coleccion inversa en ApplicationUser
-        // a proposito (WithMany() sin argumento) -- el borrado real fluye via
-        // Property (ver PropertyConfiguration).
         builder.HasOne(m => m.Cliente)
             .WithMany()
             .HasForeignKey(m => m.ClienteId)

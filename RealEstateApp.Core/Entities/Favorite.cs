@@ -1,7 +1,5 @@
 namespace RealEstateApp.Core.Entities;
 
-// Clave compuesta (ClienteId, PropertyId), sin Id propio: un cliente no puede
-// tener la misma propiedad marcada como favorita mas de una vez.
 public class Favorite
 {
     public string ClienteId { get; set; } = string.Empty;

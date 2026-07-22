@@ -1,7 +1,5 @@
 namespace RealEstateApp.Core.Models;
 
-// Los mismos filtros deben aplicar en toda pantalla que liste propiedades
-// disponibles (Home publico, Home del cliente, propiedades de un agente).
 public class PropertyFilterCriteria
 {
     public int? PropertyTypeId { get; set; }

@@ -8,8 +8,6 @@ using RealEstateApp.WebApp.Helpers;
 
 namespace RealEstateApp.WebApp.Controllers;
 
-// Publico: cualquier visitante (autenticado o no) puede ver el listado de
-// agentes activos y las propiedades disponibles de cada uno.
 public class AgentesController : Controller
 {
     private readonly IAgentService _agentService;

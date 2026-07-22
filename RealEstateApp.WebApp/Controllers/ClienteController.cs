@@ -37,7 +37,6 @@ public class ClienteController : Controller
 
     private string ClienteId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-    // "Mis propiedades" = favoritos que siguen Disponible.
     public async Task<IActionResult> MisPropiedades()
     {
         var propiedades = await _propertyService.GetFavoritesByClienteAsync(ClienteId);
@@ -73,8 +72,6 @@ public class ClienteController : Controller
             : RedirectToAction(nameof(HomeController.Index), "Home");
     }
 
-    // Detalle de propiedad (cliente) = Detalle publico + chat con el agente +
-    // mis ofertas sobre esa propiedad.
     public async Task<IActionResult> Detalle(int id)
     {
         var propiedad = await _propertyService.GetByIdWithDetailsAsync(id);
@@ -86,9 +83,6 @@ public class ClienteController : Controller
 
         var modelo = await ConstruirDetalleAsync(propiedad);
 
-        // Una propiedad Vendida desaparece del Home/Mis propiedades, pero el
-        // historial de ofertas/mensajes propio "nunca se borra" -- si el cliente
-        // ya tenia alguna interaccion aqui, sigue pudiendo consultarla.
         var accesible = propiedad.Estado == PropertyStatus.Disponible
             || modelo.MisOfertas.Count > 0
             || modelo.Mensajes.Count > 0;

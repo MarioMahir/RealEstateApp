@@ -4,11 +4,6 @@
     <ProjectReference Include="..\RealEstateApp.Core\RealEstateApp.Core.csproj" />
   </ItemGroup>
 
-  <!-- Necesario para AddIdentity<TUser,TRole>() (SignInManager, esquema de
-       cookies, etc.): son tipos de Microsoft.AspNetCore.Identity que viven en
-       el framework compartido, no solo en el paquete Microsoft.Extensions.Identity.Core.
-       No convierte a Infrastructure en un proyecto web (sin Sdk.Web, sin hosting);
-       solo habilita la referencia a esos ensamblados desde un classlib. -->
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

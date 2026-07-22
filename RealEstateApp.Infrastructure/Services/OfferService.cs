@@ -42,9 +42,6 @@ public class OfferService : GenericService<Offer>, IOfferService
         offer.Property.Estado = PropertyStatus.Vendida;
         _propertyRepository.Update(offer.Property);
 
-        // Un solo SaveChanges: EF Core lo envuelve en una transaccion implicita,
-        // por lo que la oferta aceptada, las rechazadas y el cambio de estado de
-        // la propiedad se confirman (o fallan) todos juntos.
         await UnitOfWork.SaveChangesAsync();
         return OfferActionStatus.Success;
     }

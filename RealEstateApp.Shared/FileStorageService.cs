@@ -50,13 +50,9 @@ public class FileStorageService : IFileStorageService
         }
         catch (IOException)
         {
-            // Best-effort: un archivo bloqueado no debe impedir que la
-            // operacion de base de datos (la que realmente importa) continue.
         }
     }
 
-    // Valida los primeros bytes del archivo contra la firma real del formato
-    // (no solo la extensión) para rechazar archivos renombrados/corruptos/vacíos.
     private static async Task<bool> MatchesImageSignatureAsync(Stream content, string extension)
     {
         var firmaEsperada = extension == ".png" ? PngSignature : JpegSignature;

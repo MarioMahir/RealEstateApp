@@ -2,8 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.ViewModels.Agente;
 
-// "Mi perfil" -- editar nombre/apellido/telefono/foto. La foto viaja como
-// IFormFile por separado (parametro de accion), no en este ViewModel.
 public class ProfileViewModel
 {
     [Required(ErrorMessage = "Debe completar todos los campos requeridos.")]

@@ -14,12 +14,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSharedServices(builder.Configuration, builder.Environment.WebRootPath);
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-// AddIdentity (dentro de AddInfrastructure) deja el esquema de cookies de
-// Identity como esquema por defecto. La WebAPI lo sobrescribe explicitamente a
-// JWT: sin esto, Forbid()/Unauthorized() en los controladores heredarian
-// semantica de cookie (redirects) en vez de 401/403 crudos, rompiendo la regla
-// de login cruzado (401 credenciales invalidas/usuario inactivo, 403 rol no
-// autorizado).
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,9 +33,6 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 
-    // Sin esto, un token ausente/invalido o un rol no autorizado producen un
-    // 401/403 con cuerpo vacio (comportamiento por defecto de JwtBearer) --
-    // la rubrica pide un mensaje claro en el cuerpo de ambas respuestas.
     options.Events = new JwtBearerEvents
     {
         OnChallenge = context =>
@@ -63,13 +54,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 
-// Unifica la forma de las respuestas de error: sin esto, un DataAnnotation
-// fallido (ej. [Required] en un DTO) responde con el ValidationProblemDetails
-// de ASP.NET Core ({"type","title","status","errors":{...}}), mientras que
-// las validaciones de negocio ya escritas a mano en los controladores
-// responden con {"message": "..."} -- dos formas distintas de error 400
-// conviviendo en la misma API. Esto reescribe el 400 automatico para que use
-// la MISMA forma que el resto de la API.
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = context =>

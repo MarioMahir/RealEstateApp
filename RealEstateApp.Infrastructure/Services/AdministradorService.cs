@@ -49,9 +49,6 @@ public class AdministradorService : IAdministradorService
         if (usuario is null)
             return new StaffUpdateResult { Status = StaffActionStatus.NotFound };
 
-        // La contrasena se intenta primero: si falla (no cumple las reglas de
-        // Identity), no se toca ningun otro campo -- evita un estado
-        // parcialmente actualizado.
         if (!string.IsNullOrWhiteSpace(nuevaContrasena))
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
@@ -69,10 +66,6 @@ public class AdministradorService : IAdministradorService
         usuario.Cedula = cedula;
         await _userManager.UpdateAsync(usuario);
 
-        // Email/UserName tienen su propio campo "Normalized*" que UserManager
-        // mantiene sincronizado solo si se usan estos metodos dedicados (asignar
-        // ApplicationUser.Email/UserName directo dejaria la busqueda por
-        // FindByEmailAsync/FindByNameAsync rota).
         await _userManager.SetEmailAsync(usuario, correo);
         await _userManager.SetUserNameAsync(usuario, nombreUsuario);
 

@@ -1,6 +1,5 @@
 namespace RealEstateApp.Core.ViewModels.Administrador;
 
-// "Listado de los agentes" -- muestra todos (activos e inactivos).
 public class AgentAdminListItemViewModel
 {
     public string Id { get; set; } = string.Empty;

@@ -6,8 +6,6 @@ public class Property
 {
     public int Id { get; set; }
 
-    // Codigo unico de 6 digitos, autogenerado, inmutable. Ver PropertyService
-    // para la generacion; el indice unico real vive en la configuracion de EF.
     public string Codigo { get; set; } = string.Empty;
 
     public int PropertyTypeId { get; set; }

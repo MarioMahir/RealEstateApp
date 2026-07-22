@@ -32,11 +32,6 @@ public class PropertyService : GenericService<Property>, IPropertyService
     public async Task<Property?> GetByCodeWithDetailsAsync(string codigo) =>
         await WithDetails(Repository.Query()).FirstOrDefaultAsync(p => p.Codigo == codigo);
 
-    // Las 4 consultas "publicas" de abajo comparten la misma regla de
-    // visibilidad: ademas de Estado == Disponible, la propiedad solo debe
-    // mostrarse si el agente dueno sigue Activo (inactivar un agente debe
-    // ocultar sus propiedades disponibles de toda seccion publica/cliente,
-    // no solo del listado publico de agentes).
     public async Task<List<Property>> SearchAvailableAsync(PropertyFilterCriteria criteria)
     {
         var query = ApplyFilters(
@@ -165,17 +160,11 @@ public class PropertyService : GenericService<Property>, IPropertyService
         if (propiedad is null || propiedad.Estado != PropertyStatus.Disponible)
             return false;
 
-        // Cascade real de FK (imagenes/ofertas/mensajes/favoritos/mejoras hacia
-        // Property) resuelve todo lo relacionado a nivel de base de datos.
         Repository.Delete(propiedad);
         await UnitOfWork.SaveChangesAsync();
         return true;
     }
 
-    // Las consultas genericas (GetAllAsync/GetByIdAsync heredados) no cargan
-    // relaciones; PropertyDto/los ViewModels necesitan PropertyType/SaleType/
-    // Agent/Imagenes/Mejoras, asi que estas consultas especificas si las
-    // incluyen explicitamente.
     private static IQueryable<Property> WithDetails(IQueryable<Property> query) =>
         query
             .Include(p => p.PropertyType)

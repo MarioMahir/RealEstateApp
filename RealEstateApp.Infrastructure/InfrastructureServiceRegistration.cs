@@ -11,10 +11,6 @@ using RealEstateApp.Infrastructure.Services;
 
 namespace RealEstateApp.Infrastructure;
 
-// Unico punto de registro de DI para persistencia/Identity/repos/servicios.
-// Tanto WebApp como WebAPI llaman a este mismo metodo desde su Program.cs,
-// apuntando a la misma cadena de conexion -- asi comparten el mismo esquema de
-// usuarios/roles sin compartir proceso.
 public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -42,8 +38,6 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IFavoriteService, FavoriteService>();
         services.AddScoped<IMessageService, MessageService>();
 
-        // Un solo registro, apuntando al ensamblado de Core: carga todos los
-        // Profile que haya ahi (WebApiMappingProfile y WebAppMappingProfile).
         services.AddAutoMapper(typeof(Core.Mappings.WebApiMappingProfile).Assembly);
 
         return services;

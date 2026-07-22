@@ -9,8 +9,6 @@ namespace RealEstateApp.Infrastructure.Seed;
 
 public static class AppDbContextSeed
 {
-    // Idempotente a proposito: seguro de invocar desde el arranque de la WebApp
-    // y de la WebAPI, sin importar cual de las dos corra primero.
     public static async Task SeedDefaultDataAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
@@ -37,9 +35,6 @@ public static class AppDbContextSeed
         await CrearUsuarioSiNoExisteAsync(userManager, "agente@realestateapp.com", "Agente123$",
             Core.Constants.Roles.Agente, "Agente", "Demo");
 
-        // Catalogo minimo para que el alta de propiedades (Etapa 4) sea probable
-        // desde la primera corrida. Nombres tomados literalmente de los ejemplos
-        // del documento funcional, no inventados.
         if (!context.PropertyTypes.Any())
         {
             context.PropertyTypes.AddRange(
