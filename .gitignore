@@ -61,3 +61,7 @@ secrets.json
 RealEstateApp.WebApp/wwwroot/uploads/
 RealEstateApp.WebAPI/wwwroot/uploads/
 
+
+# Correos simulados en desarrollo
+RealEstateApp.WebApp/App_Data/
+RealEstateApp.WebAPI/App_Data/
